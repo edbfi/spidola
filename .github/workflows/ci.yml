@@ -7,7 +7,6 @@ on:
   push:
     branches:
       - main
-      - feat/standardize-ci-renovate
   workflow_dispatch:
   workflow_call:
 permissions:
