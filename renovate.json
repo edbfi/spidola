@@ -1,37 +1,99 @@
 {
   "$schema": "https://docs.renovatebot.com/renovate-schema.json",
-  "extends": ["config:recommended", "group:allNonMajor"],
-  "customManagers": [
-    {
-      "customType": "regex",
-      "managerFilePatterns": ["/^biome\\.json$/"],
-      "matchStrings": [
-        "\"\\$schema\":\\s*\"https://biomejs\\.dev/schemas/(?<currentValue>[\\d.]+)/schema\\.json\""
-      ],
-      "depNameTemplate": "@biomejs/biome",
-      "datasourceTemplate": "npm"
-    }
-  ],
   "gitIgnoredAuthors": [
     "41898282+github-actions[bot]@users.noreply.github.com",
     "300104067+engels74-bot@users.noreply.github.com"
   ],
+  "extends": [
+    "github>engels74/automation:default#v1.0.0",
+    "github>engels74/automation:mixed#v1.0.0"
+  ],
   "packageRules": [
     {
-      "matchUpdateTypes": ["minor", "patch"],
-      "automerge": true
+      "description": "Native toolchains, UniFFI bindings and LGPL media graph need explicit compatibility and license review.",
+      "matchManagers": [
+        "cargo",
+        "gradle",
+        "gradle-wrapper",
+        "swift"
+      ],
+      "matchUpdateTypes": [
+        "major"
+      ],
+      "dependencyDashboardApproval": true,
+      "automerge": false
     },
     {
-      "matchManagers": ["github-actions"],
-      "matchUpdateTypes": ["major"],
-      "automerge": true
+      "description": "MPVKit must retain the licensed LGPL build and verified notices.",
+      "matchPackageNames": [
+        "/mpv/i"
+      ],
+      "dependencyDashboardApproval": true,
+      "automerge": false,
+      "groupName": "LGPL media dependencies"
     },
     {
-      "matchPackageNames": ["@biomejs/biome"],
-      "groupName": "biome",
+      "description": "Rust pin, MSRV and Apple target support must move together.",
+      "matchManagers": [
+        "rust-toolchain"
+      ],
+      "dependencyDashboardApproval": true,
       "automerge": false
     }
   ],
-  "rebaseWhen": "conflicted",
-  "prConcurrentLimit": 10
+  "customManagers": [
+    {
+      "customType": "regex",
+      "managerFilePatterns": [
+        "/^tools/ci/apple-tools\\.env$/"
+      ],
+      "matchStrings": [
+        "# renovate: depName=(?<depName>[^\\s]+)\\s+[A-Z_]+=(?<currentValue>[0-9.]+)"
+      ],
+      "datasourceTemplate": "github-releases"
+    },
+    {
+      "customType": "regex",
+      "managerFilePatterns": [
+        "/^\\.github/workflows/(android|release)\\.yml$/"
+      ],
+      "matchStrings": [
+        "cargo install (?<depName>cargo-ndk) --locked --version (?<currentValue>[0-9.]+)"
+      ],
+      "datasourceTemplate": "crate"
+    },
+    {
+      "customType": "regex",
+      "managerFilePatterns": [
+        "/^\\.github/workflows/android\\.yml$/"
+      ],
+      "matchStrings": [
+        "KOTLIN_VERSION: [\"']?(?<currentValue>[0-9.]+)"
+      ],
+      "depNameTemplate": "JetBrains/kotlin",
+      "datasourceTemplate": "github-releases"
+    },
+    {
+      "customType": "regex",
+      "managerFilePatterns": [
+        "/^tools/ci/build-contract-harness-android\\.sh$/"
+      ],
+      "matchStrings": [
+        "coroutines_version=\"(?<currentValue>[0-9.]+)\""
+      ],
+      "depNameTemplate": "org.jetbrains.kotlinx:kotlinx-coroutines-core-jvm",
+      "datasourceTemplate": "maven"
+    },
+    {
+      "customType": "regex",
+      "managerFilePatterns": [
+        "/^tools/ci/build-contract-harness-android\\.sh$/"
+      ],
+      "matchStrings": [
+        "jna_version=\"(?<currentValue>[0-9.]+)\""
+      ],
+      "depNameTemplate": "net.java.dev.jna:jna",
+      "datasourceTemplate": "maven"
+    }
+  ]
 }

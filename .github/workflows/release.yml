@@ -14,29 +14,31 @@ on:
         type: string
 
 permissions:
-  contents: write
-
+  contents: read
 concurrency:
-  group: release-${{ github.ref }}
+  group: release-${{ github.event_name }}-${{ github.event.pull_request.number || github.ref }}
   cancel-in-progress: false
 
 jobs:
+  ci:
+    uses: ./.github/workflows/ci.yml
   android-direct:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     timeout-minutes: 180
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7.0.1
         with:
           fetch-depth: 0
 
-      - uses: actions/setup-java@v4
+          persist-credentials: false
+      - uses: actions/setup-java@v6.0.0
         with:
           distribution: temurin
           java-version: "21"
 
-      - uses: android-actions/setup-android@v3
-      - uses: gradle/actions/setup-gradle@v4
-      - uses: Swatinem/rust-cache@v2
+      - uses: android-actions/setup-android@v4.0.1
+      - uses: gradle/actions/setup-gradle@v6.3.0
+      - uses: Swatinem/rust-cache@v2.9.2
 
       - name: Install pinned native build prerequisites
         run: |
@@ -44,7 +46,7 @@ jobs:
           sudo apt-get install --yes autoconf automake cmake libtool meson nasm ninja-build pkg-config
           cargo install cargo-ndk --locked --version 4.1.2
           NDK_VERSION=28.2.13676358
-          yes | sdkmanager "ndk;$NDK_VERSION" >/dev/null
+          sdkmanager "ndk;$NDK_VERSION" </dev/null >/dev/null
           echo "ANDROID_NDK_HOME=$ANDROID_SDK_ROOT/ndk/$NDK_VERSION" >> "$GITHUB_ENV"
           rustup target add aarch64-linux-android armv7-linux-androideabi x86_64-linux-android
 
@@ -118,7 +120,7 @@ jobs:
           python3 tools/release/generate-changelog.py "${args[@]}"
 
       - name: Retain release dry-run evidence
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7.0.1
         with:
           name: spidola-android-${{ env.RELEASE_VERSION }}
           if-no-files-found: error
@@ -136,3 +138,9 @@ jobs:
               --title "Spidola $RELEASE_VERSION" \
               --notes-file dist/android/CHANGELOG.md
           gh release upload "$GITHUB_REF_NAME" dist/android/* --clobber
+    needs: ci
+    permissions:
+      contents: write
+defaults:
+  run:
+    shell: bash

@@ -118,7 +118,7 @@ pub(crate) fn android() -> anyhow::Result<()> {
     let status = command
         .arg("-o")
         .arg(&jni_libs)
-        .args(["build", "-p", "core-api", "--release"])
+        .args(["build", "--locked", "-p", "core-api", "--release"])
         .status()
         .context("spawn cargo ndk")?;
     if !status.success() {
@@ -137,7 +137,15 @@ fn build_static(root: &Path, target: &str) -> anyhow::Result<()> {
     let status = Command::new(cargo())
         .current_dir(root)
         .env("TVOS_DEPLOYMENT_TARGET", TVOS_DEPLOYMENT_TARGET)
-        .args(["build", "-p", "core-api", "--release", "--target", target])
+        .args([
+            "build",
+            "--locked",
+            "-p",
+            "core-api",
+            "--release",
+            "--target",
+            target,
+        ])
         .status()
         .context("spawn cargo build")?;
     if !status.success() {

@@ -94,7 +94,7 @@ packaging-tool pin is also enforced in `.github/workflows/android.yml`.
 
 - **Rust:** none beyond `rustup` — the toolchain file installs `1.96.1` on first `cargo` run.
 - **Apple:** Xcode `26.6.x`; `swift format` ships with the toolchain; `swiftlint` via
-  Homebrew; `xcodegen` via Homebrew.
+  the pinned `tools/ci/install-apple-tools.sh` helper; it also installs XcodeGen and xcbeautify.
 - **Android:** JDK `21`; the Android SDK (`compileSdk 36`, build-tools, NDK per the table)
   via the SDK manager, `ANDROID_HOME` exported. Gradle itself comes from the committed
   wrapper (`./gradlew`).

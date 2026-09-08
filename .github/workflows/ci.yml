@@ -1,0 +1,69 @@
+# SPDX-FileCopyrightText: 2026 Spidola contributors
+# SPDX-License-Identifier: AGPL-3.0-or-later
+
+name: ci
+on:
+  pull_request:
+  push:
+    branches:
+      - main
+      - feat/standardize-ci-renovate
+  workflow_dispatch:
+  workflow_call:
+permissions:
+  contents: read
+concurrency:
+  group: ci-${{ github.event_name }}-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+jobs:
+  core:
+    uses: ./.github/workflows/core.yml
+  android:
+    uses: ./.github/workflows/android.yml
+  apple:
+    uses: ./.github/workflows/apple.yml
+  hygiene:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v7.0.1
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+      - uses: j178/prek-action@v3.0.0
+        with:
+          prek-version: 0.5.2
+          extra-args: --all-files
+        env:
+          SKIP: no-commit-to-branch,cargo-fmt,cargo-clippy,check-secret-logging,translations,cargo-deny,swift-format,swiftlint,ktlint,detekt
+      - name: Conventional Commits and DCO
+        env:
+          PR_BASE: ${{ github.event.pull_request.base.sha }}
+          PR_HEAD: ${{ github.event.pull_request.head.sha }}
+        run: |
+          base="${PR_BASE:-$(git merge-base origin/main HEAD)}"
+          head="${PR_HEAD:-$GITHUB_SHA}"
+          if [[ "$base" = "$head" ]]; then base="$(git rev-parse "$head^")"; fi
+          for commit in $(git rev-list "$base..$head"); do
+            git show -s --format=%B "$commit" > "$RUNNER_TEMP/commit-message"
+            prek run --hook-stage commit-msg --commit-msg-filename "$RUNNER_TEMP/commit-message"
+          done
+      - run: git diff --exit-code HEAD
+  required:
+    name: ci / required
+    if: always()
+    needs:
+      - core
+      - android
+      - apple
+      - hygiene
+    runs-on: ubuntu-24.04
+    timeout-minutes: 5
+    steps:
+      - uses: engels74/automation/actions/gate@v1.0.0
+        with:
+          needs: ${{ toJSON(needs) }}
+          required: core android apple hygiene
+defaults:
+  run:
+    shell: bash
