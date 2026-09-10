@@ -102,7 +102,7 @@ pub(crate) fn check() -> anyhow::Result<()> {
 fn build_cdylib(root: &Path) -> anyhow::Result<PathBuf> {
     let status = Command::new(cargo())
         .current_dir(root)
-        .args(["build", "-p", "core-api", "--lib"])
+        .args(["build", "--locked", "-p", "core-api", "--lib"])
         .status()
         .context("spawn cargo build")?;
     if !status.success() {

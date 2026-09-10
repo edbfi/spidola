@@ -28,10 +28,10 @@ fetch() { # url dest
 }
 
 echo "== building core-api cdylib (host) =="
-cargo build -p core-api --lib
+cargo build --locked -p core-api --lib
 
 echo "== regenerating bindings (must match committed) =="
-cargo run --quiet -p xtask -- check-bindings
+cargo run --locked --quiet -p xtask -- check-bindings
 
 echo "== resolving JNA + coroutines jars =="
 fetch "$central/net/java/dev/jna/jna/$jna_version/jna-$jna_version.jar" "$jars/jna.jar"

@@ -13,8 +13,8 @@ edition = "2024"
 rust-version = "1.96.1"
 license = "AGPL-3.0-or-later"
 authors = ["Spidola contributors"]
-repository = "https://github.com/edbpede/spidola"
-homepage = "https://github.com/edbpede/spidola"
+repository = "https://github.com/edbfi/spidola"
+homepage = "https://github.com/edbfi/spidola"
 
 # Shared dependency versions are declared once here and referenced from member
 # crates with `{ workspace = true }`. rustls-only HTTP (no OpenSSL, TECH_SPEC §4.5);

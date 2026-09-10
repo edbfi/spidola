@@ -7,28 +7,34 @@
 name: apple
 
 on:
-  push:
-    branches: [main]
-  pull_request:
+  workflow_call:
+  workflow_dispatch:
 
 permissions:
   contents: read
 
 concurrency:
-  group: apple-${{ github.ref }}
+  group: apple-${{ github.event_name }}-${{ github.event.pull_request.number || github.ref }}
   cancel-in-progress: true
 
 jobs:
   apple:
     runs-on: macos-26
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7.0.1
 
+        with:
+          persist-credentials: false
       - name: Select pinned Xcode
-        uses: maxim-lobanov/setup-xcode@v1
+        uses: maxim-lobanov/setup-xcode@v1.7.0
         with:
           xcode-version: "26.6"
 
+      - uses: actions-rust-lang/setup-rust-toolchain@v2.0.0
+        with:
+          target: aarch64-apple-tvos,aarch64-apple-tvos-sim
+      - name: Install pinned Apple CLI tools
+        run: tools/ci/install-apple-tools.sh
       - name: Assert toolchains
         run: tools/ci/assert-toolchains.sh
 
@@ -53,8 +59,7 @@ jobs:
             -print0 | xargs -0 swift format lint --strict
 
       - name: SwiftLint
-        run: |
-          brew install swiftlint
+        run: |-
           swiftlint lint --strict
 
       - name: Add tvOS Rust targets
@@ -62,7 +67,7 @@ jobs:
 
       - name: Build + stage the UniFFI XCFramework
         run: |
-          cargo run -p xtask -- package-xcframework
+          cargo run --locked -p xtask -- package-xcframework
           rm -rf apps/tvos/Packages/CoreKit/CoreFFI.xcframework
           cp -R target/xcframework/CoreFFI.xcframework \
             apps/tvos/Packages/CoreKit/CoreFFI.xcframework
@@ -81,7 +86,6 @@ jobs:
       - name: Generate Xcode project + build app
         run: |
           set -o pipefail
-          brew install xcodegen xcbeautify
           cd apps/tvos
           xcodegen generate
           xcodebuild build \
@@ -100,20 +104,26 @@ jobs:
 
   # FFI parity keel (TECH_SPEC §5, §10): build the Swift contract harness against the real
   # compiled core and run the same fixture flow as the Rust + Kotlin harnesses.
+      - name: Reject tracked-file mutation
+        run: git diff --exit-code HEAD
+    timeout-minutes: 90
   contract:
     runs-on: macos-26
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7.0.1
 
+        with:
+          persist-credentials: false
       - name: Select pinned Xcode
-        uses: maxim-lobanov/setup-xcode@v1
+        uses: maxim-lobanov/setup-xcode@v1.7.0
         with:
           xcode-version: "26.6"
 
+      - uses: actions-rust-lang/setup-rust-toolchain@v2.0.0
+        with:
+          target: aarch64-apple-tvos,aarch64-apple-tvos-sim
       - name: Show pinned Rust toolchain
         run: rustup show
-
-      - uses: Swatinem/rust-cache@v2
 
       # Packaging (TECH_SPEC §9): the tvOS targets are Rust Tier 2, so prebuilt std ships with
       # the pinned stable toolchain — no `-Z build-std` (fallback in docs/toolchains.md).
@@ -121,7 +131,13 @@ jobs:
         run: rustup target add aarch64-apple-tvos aarch64-apple-tvos-sim
 
       - name: Build tvOS XCFramework
-        run: cargo run -p xtask -- package-xcframework
+        run: cargo run --locked -p xtask -- package-xcframework
 
       - name: Swift FFI contract harness
         run: tools/ci/build-contract-harness-tvos.sh
+      - name: Reject tracked-file mutation
+        run: git diff --exit-code HEAD
+    timeout-minutes: 90
+defaults:
+  run:
+    shell: bash

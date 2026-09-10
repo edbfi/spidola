@@ -26,7 +26,7 @@ public struct LogoImage: View {
       if let image {
         Image(uiImage: image)
           .resizable()
-          .aspectRatio(contentMode: .fit)
+          .scaledToFit()
       } else {
         placeholder
       }

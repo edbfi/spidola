@@ -17,10 +17,10 @@ libdir="target/debug"
 out="target/contract-harness-tvos"
 
 echo "== building core-api cdylib (host) =="
-cargo build -p core-api --lib
+cargo build --locked -p core-api --lib
 
 echo "== regenerating bindings (must match committed) =="
-cargo run --quiet -p xtask -- check-bindings
+cargo run --locked --quiet -p xtask -- check-bindings
 
 echo "== compiling Swift harness =="
 swiftc -O \
