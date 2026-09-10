@@ -518,7 +518,7 @@ mod tests {
 
     #[test]
     fn the_source_link_points_at_the_repository_the_crate_declares() {
-        assert_eq!(SOURCE_URL, "https://github.com/edbpede/spidola");
+        assert_eq!(SOURCE_URL, "https://github.com/edbfi/spidola");
     }
 
     // --- Escaping ---

@@ -33,7 +33,7 @@ use tokio::net::TcpStream;
 use core_pair::{PairError, PairServer, Submission, SubmissionSink};
 
 /// The repository the AGPL §13 colophon must offer on every page.
-const SOURCE_URL: &str = "https://github.com/edbpede/spidola";
+const SOURCE_URL: &str = "https://github.com/edbfi/spidola";
 
 /// A sink that keeps what it is given, so tests can ask what reached the shell.
 #[derive(Clone, Default)]

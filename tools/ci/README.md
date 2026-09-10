@@ -16,8 +16,8 @@ force pushes, deletion and bypass. Keep any existing external DCO check required
 Tag releases call the complete CI workflow before building their signed APK.
 
 Actions use full release tags. The common gate and Renovate defaults come from
-`engels74/automation` at an immutable version; Renovate proposes explicit adoption
-of future shared releases across all three owners. Configuration currently uses
+`edbfi/automation` at an immutable version; Renovate proposes explicit adoption
+of future shared releases for this repository. Configuration currently uses
 the non-automerge base until rollout settings and the revised policy are verified.
 Rust/Cargo, Gradle, SwiftPM and native media upgrades retain their compatibility,
 FFI and license checks. Pre-1.0 minor upgrades need explicit review. There is no
