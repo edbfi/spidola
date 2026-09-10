@@ -37,6 +37,8 @@ jobs:
           SKIP: no-commit-to-branch,cargo-fmt,cargo-clippy,check-secret-logging,translations,cargo-deny,swift-format,swiftlint,ktlint,detekt
       - name: Conventional Commits and DCO
         env:
+          # CI validates existing commits; the local branch guard rejects main checkouts.
+          SKIP: no-commit-to-branch
           PR_BASE: ${{ github.event.pull_request.base.sha }}
           PR_HEAD: ${{ github.event.pull_request.head.sha }}
         run: |
