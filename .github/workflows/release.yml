@@ -34,6 +34,7 @@ jobs:
       - uses: actions/setup-java@v6.0.1
         with:
           distribution: temurin
+          verify-signature: true
           java-version: "21"
 
       - uses: android-actions/setup-android@v4.0.1
