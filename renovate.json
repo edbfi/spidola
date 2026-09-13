@@ -4,40 +4,17 @@
     "41898282+github-actions[bot]@users.noreply.github.com"
   ],
   "extends": [
-    "github>edbfi/automation:default#v1.0.0",
-    "github>edbfi/automation:mixed#v1.0.0"
+    "github>edbfi/automation//default.json#v1.1.0",
+    "github>edbfi/automation//mixed.json#v1.1.0",
+    "github>edbfi/automation//automerge.json#v1.1.0"
   ],
   "packageRules": [
-    {
-      "description": "Native toolchains, UniFFI bindings and LGPL media graph need explicit compatibility and license review.",
-      "matchManagers": [
-        "cargo",
-        "gradle",
-        "gradle-wrapper",
-        "swift"
-      ],
-      "matchUpdateTypes": [
-        "major"
-      ],
-      "dependencyDashboardApproval": true,
-      "automerge": false
-    },
     {
       "description": "MPVKit must retain the licensed LGPL build and verified notices.",
       "matchPackageNames": [
         "/mpv/i"
       ],
-      "dependencyDashboardApproval": true,
-      "automerge": false,
       "groupName": "LGPL media dependencies"
-    },
-    {
-      "description": "Rust pin, MSRV and Apple target support must move together.",
-      "matchManagers": [
-        "rust-toolchain"
-      ],
-      "dependencyDashboardApproval": true,
-      "automerge": false
     }
   ],
   "customManagers": [

@@ -65,11 +65,9 @@ precedence = "aggregate"
 SPDX-FileCopyrightText = "2026 Spidola contributors"
 SPDX-License-Identifier = "AGPL-3.0-or-later"
 
-# Renovate config is JSON (no comment syntax) and is kept byte-identical to the
-# canonical config shared across edbpede repositories, so it cannot carry an
-# inline header either.
+# Automation configuration is JSON and cannot carry inline SPDX headers.
 [[annotations]]
-path = ["renovate.json"]
+path = ["renovate.json", ".github/merge-policy.json"]
 precedence = "aggregate"
 SPDX-FileCopyrightText = "2026 Spidola contributors"
 SPDX-License-Identifier = "AGPL-3.0-or-later"
