@@ -20,7 +20,7 @@ jars="$work/jars"
 mkdir -p "$jars"
 
 coroutines_version="1.11.0"
-jna_version="5.17.0"
+jna_version="5.19.1"
 central="https://repo1.maven.org/maven2"
 
 fetch() { # url dest
