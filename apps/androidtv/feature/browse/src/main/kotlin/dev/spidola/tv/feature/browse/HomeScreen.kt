@@ -15,11 +15,14 @@ import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.focus.focusRestorer
+import androidx.compose.ui.layout.onPlaced
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.semantics
@@ -99,8 +102,11 @@ private fun HomeReady(
 ) {
     val firstSource = remember { FocusRequester() }
     val enabledSources = content.sources.filter { it.common.enabled }
-    LaunchedEffect(enabledSources.firstOrNull()?.id) {
-        if (enabledSources.isNotEmpty()) firstSource.requestFocus()
+    val firstSourceId = enabledSources.firstOrNull()?.id
+    var firstSourcePlaced by remember(firstSourceId) { mutableStateOf(false) }
+    LaunchedEffect(firstSourceId, firstSourcePlaced) {
+        // Lazy rows are attached during layout, after the parent has entered composition.
+        if (firstSourcePlaced) firstSource.requestFocus()
     }
     LazyColumn(
         modifier = Modifier.fillMaxSize().focusRestorer(firstSource),
@@ -156,7 +162,13 @@ private fun HomeReady(
                     Modifier
                         .padding(horizontal = SpidolaSpacing.safeHorizontal)
                         .testTag("source-${source.name}")
-                        .then(if (index == 0) Modifier.focusRequester(firstSource) else Modifier),
+                        .then(
+                            if (index == 0) {
+                                Modifier.focusRequester(firstSource).onPlaced { firstSourcePlaced = true }
+                            } else {
+                                Modifier
+                            },
+                        ),
             )
         }
         item {
