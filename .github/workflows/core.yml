@@ -41,7 +41,7 @@ jobs:
       - name: test
         run: cargo test --locked --workspace
 
-      - uses: taiki-e/install-action@v2.87.8
+      - uses: taiki-e/install-action@v2.87.12
         with:
           tool: cargo-deny@0.20.2
       - name: cargo-deny
