@@ -8,6 +8,11 @@ on:
     branches:
       - main
   workflow_dispatch:
+    inputs:
+      expected-default-sha:
+        description: Exact default-branch commit requested after a checked merge
+        type: string
+        default: ""
   workflow_call:
 permissions:
   contents: read
@@ -15,13 +20,25 @@ concurrency:
   group: ci-${{ github.event_name }}-${{ github.event.pull_request.number || github.ref }}
   cancel-in-progress: true
 jobs:
+  guard:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 5
+    steps:
+      - uses: edbfi/automation/actions/dispatch-guard@v1.0.0
+        with:
+          token: ${{ github.token }}
+          expected-default-sha: ${{ inputs.expected-default-sha }}
   core:
+    needs: guard
     uses: ./.github/workflows/core.yml
   android:
+    needs: guard
     uses: ./.github/workflows/android.yml
   apple:
+    needs: guard
     uses: ./.github/workflows/apple.yml
   hygiene:
+    needs: guard
     runs-on: ubuntu-24.04
     timeout-minutes: 15
     steps:
@@ -54,6 +71,7 @@ jobs:
     name: ci / required
     if: always()
     needs:
+      - guard
       - core
       - android
       - apple
@@ -61,10 +79,14 @@ jobs:
     runs-on: ubuntu-24.04
     timeout-minutes: 5
     steps:
+      - uses: edbfi/automation/actions/dispatch-guard@v1.0.0
+        with:
+          token: ${{ github.token }}
+          expected-default-sha: ${{ inputs.expected-default-sha }}
       - uses: edbfi/automation/actions/gate@v1.0.0
         with:
           needs: ${{ toJSON(needs) }}
-          required: core android apple hygiene
+          required: guard core android apple hygiene
 defaults:
   run:
     shell: bash

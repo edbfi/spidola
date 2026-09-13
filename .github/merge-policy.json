@@ -1,0 +1,26 @@
+{
+  "schema": 1,
+  "enabled": true,
+  "ci_workflow": "ci.yml",
+  "required_checks": [
+    "guard",
+    "core / rust",
+    "core / Criterion regression gate",
+    "core / reuse",
+    "android / android",
+    "android / contract",
+    "apple / apple",
+    "apple / contract",
+    "hygiene",
+    "ci / required"
+  ],
+  "optional_checks": [],
+  "check_app_id": 15368,
+  "renovate": {
+    "login": "renovate[bot]",
+    "id": 29139614
+  },
+  "renovate_comment": "/merge-when-green",
+  "minimum_approvals": 0,
+  "deploy_workflows": []
+}
