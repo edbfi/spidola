@@ -16,7 +16,7 @@ use base64::engine::general_purpose::URL_SAFE_NO_PAD;
 use core_model::ids::ChannelIdentity;
 use core_model::locator::StreamLocator;
 use core_model::secret::Secret;
-use rand::Rng as _;
+use rand::RngExt as _;
 use ring::aead::{self, Aad, LessSafeKey, Nonce, UnboundKey};
 use ring::hmac;
 use zeroize::Zeroizing;

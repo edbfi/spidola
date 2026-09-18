@@ -186,7 +186,7 @@ final class PlaybackModelTests: XCTestCase {
     let model = harness.model()
     await model.start()
     harness.engines[0].simulate(.failed(.unsupportedFormat))
-    await settle()
+    await waitForFallback(model)
     await model.tryOtherPlayer(remember: true)
     XCTAssertEqual(harness.built.map(\.rawValue), ["mpv", "avplayer"])
     XCTAssertEqual(harness.access.channelEngines["1-10"], "avplayer")
@@ -199,7 +199,7 @@ final class PlaybackModelTests: XCTestCase {
     let model = harness.model()
     await model.start()
     harness.engines[0].simulate(.failed(.unsupportedFormat))
-    await settle()
+    await waitForFallback(model)
     await model.tryOtherPlayer(remember: false)
     XCTAssertEqual(harness.built.map(\.rawValue), ["mpv", "avplayer"])
     XCTAssertNil(harness.access.channelEngines["1-10"])
@@ -211,7 +211,7 @@ final class PlaybackModelTests: XCTestCase {
     let model = harness.model()
     await model.start()
     harness.engines[0].simulate(.failed(.unsupportedFormat))
-    await settle()
+    await waitForFallback(model)
     await model.tryOtherPlayer(remember: false)
     XCTAssertTrue(harness.engines[0].isStopped)
   }
@@ -330,6 +330,16 @@ final class PlaybackModelTests: XCTestCase {
     await model.start()
     await settle()
     XCTAssertEqual(harness.access.recorded.map(\.identity), [10])
+  }
+
+  /// A fixed number of executor yields cannot prove that the state stream was consumed.
+  private func waitForFallback(_ model: PlaybackModel) async {
+    let deadline = ContinuousClock.now.advanced(by: .seconds(2))
+    while model.fallbackOffer == nil && ContinuousClock.now < deadline {
+      await Task.yield()
+    }
+    XCTAssertNotNil(
+      model.fallbackOffer, "the failure must be observed before trying another player")
   }
 
   /// Lets the model's detached window/recents tasks and the engine's state stream run.
