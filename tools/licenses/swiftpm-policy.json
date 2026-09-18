@@ -22,8 +22,8 @@
       "identity": "mpvkit",
       "name": "MPVKit",
       "location": "https://github.com/mpvkit/MPVKit.git",
-      "version": "0.41.0",
-      "revision": "613c0ccc3acf70e136aaff880a9b5fe8fdfaf5b8",
+      "version": "1.0.0",
+      "revision": "288527dffbc6d3e63cce147fc7b520c64a791603",
       "license": "LGPL-3.0-only",
       "licenseFile": "LICENSE",
       "licenseSha256": "ea8af5e789cb2d4e9b10bce3874982ade163b749b6bfbdb32e2df21c4d106de1"
