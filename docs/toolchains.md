@@ -21,7 +21,7 @@ let the three CI lanes prove the tree still builds green.
 
 | Item | Pin |
 |---|---|
-| Rust toolchain | **1.96.1** (`rust-toolchain.toml`, `profile = "minimal"`, components `rustfmt` + `clippy`) |
+| Rust toolchain | **1.98.1** (`rust-toolchain.toml`, `profile = "minimal"`, components `rustfmt` + `clippy`) |
 | Edition | 2024 (resolver 3) |
 | MSRV | 1.96.1 (`workspace.package.rust-version`) |
 
@@ -74,27 +74,28 @@ packaging-tool pin is also enforced in `.github/workflows/android.yml`.
 
 | Item | Pin |
 |---|---|
-| JDK (Gradle toolchain) | **21** (Temurin/OpenJDK LTS) |
-| Kotlin | **2.4.0** (K2-only compiler; `org.jetbrains.kotlin.plugin.compose`) |
-| KSP | **2.3.10** (KSP2 unified versioning, Kotlin 2.4.0 support; never KAPT) |
+| JDK (CI runtime) | **25** (Temurin/OpenJDK LTS); Detekt 1.x alone uses the runner’s **21** compatibility runtime |
+| Java/Kotlin compilation toolchain | **21** (source and bytecode target; minimum local JDK) |
+| Kotlin | **2.4.20** (K2-only compiler; `org.jetbrains.kotlin.plugin.compose`) |
+| KSP | **2.3.12** (KSP2 unified versioning; never KAPT) |
 | Android Gradle Plugin | **9.4.0** |
-| Gradle | **9.6.0** (`gradle-wrapper.properties`) |
+| Gradle | **9.7.1** (`gradle-wrapper.properties`) |
 | compileSdk / targetSdk | **37** / **36** |
 | minSdk | **26** |
 | NDK | **28.2.13676358** (per-ABI core + libmpv builds, `tools/build-libmpv-android/`) |
 | cargo-ndk | **4.1.2** (Android native packaging) |
 | Compose for TV | `androidx.tv:tv-material` **1.1.x** on foundation lazy layouts |
 | Navigation | Navigation 3 (`androidx.navigation3`) |
-| Default / fallback player | Media3 ExoPlayer **1.10.x** (`media3-ui-compose`) / libmpv (JNI) |
+| Default / fallback player | Media3 ExoPlayer **1.11.x** (`media3-ui-compose`) / libmpv (JNI) |
 | DI | Manual constructor composition accepted for M0; Hilt with KSP2 is the post-M0 production-hardening target |
 
 > Android device/emulator ABIs: `arm64-v8a`, `armeabi-v7a` (devices) and `x86_64` (emulator).
 
 ## Local prerequisites
 
-- **Rust:** none beyond `rustup` — the toolchain file installs `1.96.1` on first `cargo` run.
+- **Rust:** none beyond `rustup` — the toolchain file installs `1.98.1` on first `cargo` run.
 - **Apple:** Xcode `26.6.x`; `swift format` ships with the toolchain; `swiftlint` via
   the pinned `tools/ci/install-apple-tools.sh` helper; it also installs XcodeGen and xcbeautify.
-- **Android:** JDK `21`; the Android SDK (`compileSdk 37`, build-tools, NDK per the table)
+- **Android:** JDK `21` or newer (CI runs JDK `25`; run Detekt 1.x with JDK `21` because its embedded Kotlin compiler cannot parse Java `25`); the Android SDK (`compileSdk 37`, build-tools, NDK per the table)
   via the SDK manager, `ANDROID_HOME` exported. Gradle itself comes from the committed
   wrapper (`./gradlew`).

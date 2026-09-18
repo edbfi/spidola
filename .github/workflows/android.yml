@@ -4,7 +4,8 @@
 # Android lane (TECH_SPEC §9): native core + APK, lint/static analysis, JVM tests, and a
 # real-core Android TV emulator smoke test.
 # Toolchain pins live in apps/androidtv/gradle/libs.versions.toml + the committed wrapper;
-# JDK is pinned to 21 (docs/toolchains.md). detekt/ktlint complexity rules are advisory
+# CI runs JDK 25; compilation targets JDK 21 (docs/toolchains.md).
+# detekt/ktlint complexity rules are advisory
 # (config/detekt/detekt.yml, modularity doctrine §3.1).
 name: android
 
@@ -62,9 +63,9 @@ jobs:
         with:
           distribution: temurin
           verify-signature: true
-          java-version: "21"
+          java-version: "25"
 
-      - uses: android-actions/setup-android@v4.0.1
+      - uses: android-actions/setup-android@v4.0.4
         with:
           packages: platform-tools
 
@@ -91,8 +92,18 @@ jobs:
       - name: Verify libmpv pins and LGPL flags
         run: ../../tools/build-libmpv-android/verify-pins.sh
 
-      - name: Android Lint + ktlint + detekt (advisory complexity)
-        run: ./gradlew lintDebug ktlintCheck detekt
+      - name: Android Lint + ktlint
+        run: ./gradlew lintDebug ktlintCheck
+
+      # Detekt 1.x embeds Kotlin 2.0, which cannot parse the Java 25 runtime version.
+      # Keep this required analyzer on the runner's JDK 21 until Detekt supports 25;
+      # the build, tests, and contract harness still run with the selected JDK 25.
+      - name: Detekt (JDK 21 compatibility runtime)
+        run: |
+          export JAVA_HOME="${JAVA_HOME_21_X64:?The runner must provide JDK 21 for Detekt}"
+          export PATH="$JAVA_HOME/bin:$PATH"
+          java -version
+          ./gradlew detekt
 
       - name: Gradle dependency license gate
         run: ./gradlew :app:licenseeRelease
@@ -157,11 +168,11 @@ jobs:
         with:
           distribution: temurin
           verify-signature: true
-          java-version: "21"
+          java-version: "25"
 
       - name: Install pinned Kotlin compiler
         env:
-          KOTLIN_VERSION: 2.4.0
+          KOTLIN_VERSION: 2.4.20
         run: |
           curl --fail --location --retry 3 "https://github.com/JetBrains/kotlin/releases/download/v$KOTLIN_VERSION/kotlin-compiler-$KOTLIN_VERSION.zip" -o "$RUNNER_TEMP/kotlin.zip"
           unzip -q "$RUNNER_TEMP/kotlin.zip" -d "$RUNNER_TEMP/kotlin"
