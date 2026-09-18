@@ -44,7 +44,12 @@ class CustomChannelsViewModelTest {
             val state = viewModel.state.value
             check(state is LoadState.Ready)
             assertEquals(listOf("Local"), state.value.groups.map { it.name })
-            assertEquals(listOf("DR Living"), state.value.sections.flatMap { it.channels }.map { it.name })
+            assertEquals(
+                listOf("DR Living"),
+                state.value.sections
+                    .flatMap { it.channels }
+                    .map { it.name },
+            )
         }
 
     @Test

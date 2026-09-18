@@ -2,5 +2,7 @@
 # SPDX-License-Identifier: AGPL-3.0-or-later
 
 [*.{kt,kts}]
+# Keep formatter output within Detekt’s existing default line-length limit.
+max_line_length = 120
 # @Composable functions are UI elements named in PascalCase by Compose convention, not verbs.
 ktlint_function_naming_ignore_when_annotated_with = Composable

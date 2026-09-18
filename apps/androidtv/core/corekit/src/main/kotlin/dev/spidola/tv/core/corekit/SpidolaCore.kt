@@ -178,9 +178,8 @@ class SpidolaCore private constructor(
 
     override suspend fun deleteSource(id: Long) = core.sources().delete(id)
 
-    override fun importUrl(id: Long): Flow<ImportEvent> {
-        return importFlow { listener -> core.sources().refresh(id, listener) }
-    }
+    override fun importUrl(id: Long): Flow<ImportEvent> =
+        importFlow { listener -> core.sources().refresh(id, listener) }
 
     override fun importContent(
         id: Long,
@@ -295,9 +294,10 @@ class SpidolaCore private constructor(
         }
     }
 
-    override suspend fun favoriteIdentities(sourceId: Long): List<Long> {
-        return core.favorites().list(sourceId).map { it.identity }
-    }
+    override suspend fun favoriteIdentities(sourceId: Long): List<Long> =
+        core.favorites().list(sourceId).map {
+            it.identity
+        }
 
     override suspend fun favoriteChannels(
         offset: UInt,
@@ -583,7 +583,12 @@ class SpidolaCore private constructor(
     // adapter is the one seam that translates between them. `PlaybackAccess` deliberately keeps
     // the raw value rather than either enum: it is the shell's own narrow contract, and pushing
     // a core FFI type through it would make the playback slice depend on the boundary's shape.
-    override suspend fun bufferingProfile(): String? = core.settings().snapshot().buffering.stored()
+    override suspend fun bufferingProfile(): String? =
+        core
+            .settings()
+            .snapshot()
+            .buffering
+            .stored()
 
     override suspend fun setBufferingProfile(profile: String) = core.settings().setBuffering(profile.toCoreBuffering())
 

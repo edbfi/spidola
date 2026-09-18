@@ -202,7 +202,10 @@ class AndroidTvSmokeTest {
             InstrumentationRegistry.getInstrumentation().targetContext.applicationContext as SpidolaApplication
         createdSourceId =
             runBlocking {
-                app.container.core.sources().single { it.name == testSourceName }.id
+                app.container.core
+                    .sources()
+                    .single { it.name == testSourceName }
+                    .id
             }
         composeRule.onNodeWithTag(DONE_TAG).performSemanticsAction(SemanticsActions.OnClick)
         composeRule.waitUntil(timeoutMillis = NAV_TIMEOUT_MS) {
@@ -214,7 +217,8 @@ class AndroidTvSmokeTest {
         // outgoing text editor's IME to finish hiding so Back navigates instead of dismissing it.
         composeRule.waitUntil(timeoutMillis = NAV_TIMEOUT_MS) {
             composeRule.runOnIdle {
-                ViewCompat.getRootWindowInsets(composeRule.activity.window.decorView)
+                ViewCompat
+                    .getRootWindowInsets(composeRule.activity.window.decorView)
                     ?.isVisible(WindowInsetsCompat.Type.ime()) == false
             }
         }

@@ -50,8 +50,17 @@ class GuideViewModelTest {
 
             val state = viewModel.state.value
             check(state is LoadState.Ready)
-            assertEquals("Fixture", state.value.sources.single().source.name)
-            assertTrue(state.value.sources.single().hasFeed)
+            assertEquals(
+                "Fixture",
+                state.value.sources
+                    .single()
+                    .source.name,
+            )
+            assertTrue(
+                state.value.sources
+                    .single()
+                    .hasFeed,
+            )
         }
 
     @Test

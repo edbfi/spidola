@@ -374,7 +374,9 @@ private fun ControlRoomField(
 }
 
 private fun parseHeaders(text: String): List<CustomRequestHeader> =
-    text.lineSequence().mapNotNull { line ->
-        val split = line.indexOf(':')
-        if (split <= 0) null else CustomRequestHeader(line.take(split).trim(), line.drop(split + 1).trim())
-    }.toList()
+    text
+        .lineSequence()
+        .mapNotNull { line ->
+            val split = line.indexOf(':')
+            if (split <= 0) null else CustomRequestHeader(line.take(split).trim(), line.drop(split + 1).trim())
+        }.toList()

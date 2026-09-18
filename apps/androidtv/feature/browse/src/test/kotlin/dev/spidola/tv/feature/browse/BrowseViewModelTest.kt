@@ -144,8 +144,18 @@ class BrowseViewModelTest {
                 )
             advanceUntilIdle()
 
-            assertEquals("Evening news", viewModel.state.value.schedule?.current?.title)
-            assertEquals("Weather", viewModel.state.value.schedule?.next?.title)
+            assertEquals(
+                "Evening news",
+                viewModel.state.value.schedule
+                    ?.current
+                    ?.title,
+            )
+            assertEquals(
+                "Weather",
+                viewModel.state.value.schedule
+                    ?.next
+                    ?.title,
+            )
         }
 
     @Test
@@ -220,7 +230,14 @@ class BrowseViewModelTest {
             check(firstPage is LoadState.Ready)
             assertEquals(80, firstPage.value.size)
             assertEquals(listOf(80), epgAccess.batchCalls.map { it.size })
-            assertEquals("Now", firstPage.value.first().schedule?.current?.title)
+            assertEquals(
+                "Now",
+                firstPage.value
+                    .first()
+                    .schedule
+                    ?.current
+                    ?.title,
+            )
 
             viewModel.loadMoreIfNeeded(firstPage.value.last())
             advanceUntilIdle()

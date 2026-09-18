@@ -159,6 +159,9 @@ fun ChannelDetailScreen(
 private const val DETAIL_LOGO_ASPECT = 16f / 9f
 private const val UNIX_MILLIS_PER_SECOND = 1_000L
 
-private fun Long.asTime(): String {
-    return DateFormat.getTimeInstance(DateFormat.SHORT).format(Date(this * UNIX_MILLIS_PER_SECOND))
-}
+private fun Long.asTime(): String =
+    DateFormat.getTimeInstance(DateFormat.SHORT).format(
+        Date(
+            this * UNIX_MILLIS_PER_SECOND,
+        ),
+    )

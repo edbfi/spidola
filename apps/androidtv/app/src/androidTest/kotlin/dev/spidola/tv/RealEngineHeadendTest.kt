@@ -149,7 +149,8 @@ class RealEngineHeadendTest {
         }
 
         data object Unknown : Expected {
-            override fun matches(state: PlaybackState): Boolean = state is PlaybackState.Failed && state.error is EngineError.Unknown
+            override fun matches(state: PlaybackState): Boolean =
+                state is PlaybackState.Failed && state.error is EngineError.Unknown
         }
     }
 

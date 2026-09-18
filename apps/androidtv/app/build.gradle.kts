@@ -75,12 +75,21 @@ androidComponents.onVariants { variant ->
 
 android {
     namespace = "dev.spidola.tv"
-    compileSdk = libs.versions.compileSdk.get().toInt()
+    compileSdk =
+        libs.versions.compileSdk
+            .get()
+            .toInt()
 
     defaultConfig {
         applicationId = "dev.spidola.tv"
-        minSdk = libs.versions.minSdk.get().toInt()
-        targetSdk = libs.versions.targetSdk.get().toInt()
+        minSdk =
+            libs.versions.minSdk
+                .get()
+                .toInt()
+        targetSdk =
+            libs.versions.targetSdk
+                .get()
+                .toInt()
         versionCode = configuredVersionCode
         versionName = configuredVersionName
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
