@@ -21,7 +21,7 @@ let the three CI lanes prove the tree still builds green.
 
 | Item | Pin |
 |---|---|
-| Rust toolchain | **1.96.1** (`rust-toolchain.toml`, `profile = "minimal"`, components `rustfmt` + `clippy`) |
+| Rust toolchain | **1.98.1** (`rust-toolchain.toml`, `profile = "minimal"`, components `rustfmt` + `clippy`) |
 | Edition | 2024 (resolver 3) |
 | MSRV | 1.96.1 (`workspace.package.rust-version`) |
 
@@ -92,7 +92,7 @@ packaging-tool pin is also enforced in `.github/workflows/android.yml`.
 
 ## Local prerequisites
 
-- **Rust:** none beyond `rustup` — the toolchain file installs `1.96.1` on first `cargo` run.
+- **Rust:** none beyond `rustup` — the toolchain file installs `1.98.1` on first `cargo` run.
 - **Apple:** Xcode `26.6.x`; `swift format` ships with the toolchain; `swiftlint` via
   the pinned `tools/ci/install-apple-tools.sh` helper; it also installs XcodeGen and xcbeautify.
 - **Android:** JDK `21`; the Android SDK (`compileSdk 37`, build-tools, NDK per the table)
