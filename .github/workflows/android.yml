@@ -92,8 +92,18 @@ jobs:
       - name: Verify libmpv pins and LGPL flags
         run: ../../tools/build-libmpv-android/verify-pins.sh
 
-      - name: Android Lint + ktlint + detekt (advisory complexity)
-        run: ./gradlew lintDebug ktlintCheck detekt
+      - name: Android Lint + ktlint
+        run: ./gradlew lintDebug ktlintCheck
+
+      # Detekt 1.x embeds Kotlin 2.0, which cannot parse the Java 25 runtime version.
+      # Keep this required analyzer on the runner's JDK 21 until Detekt supports 25;
+      # the build, tests, and contract harness still run with the selected JDK 25.
+      - name: Detekt (JDK 21 compatibility runtime)
+        run: |
+          export JAVA_HOME="${JAVA_HOME_21_X64:?The runner must provide JDK 21 for Detekt}"
+          export PATH="$JAVA_HOME/bin:$PATH"
+          java -version
+          ./gradlew detekt
 
       - name: Gradle dependency license gate
         run: ./gradlew :app:licenseeRelease
