@@ -74,7 +74,8 @@ packaging-tool pin is also enforced in `.github/workflows/android.yml`.
 
 | Item | Pin |
 |---|---|
-| JDK (Gradle toolchain) | **21** (Temurin/OpenJDK LTS) |
+| JDK (CI runtime) | **25** (Temurin/OpenJDK LTS) |
+| Java/Kotlin compilation toolchain | **21** (source and bytecode target; minimum local JDK) |
 | Kotlin | **2.4.20** (K2-only compiler; `org.jetbrains.kotlin.plugin.compose`) |
 | KSP | **2.3.12** (KSP2 unified versioning; never KAPT) |
 | Android Gradle Plugin | **9.4.0** |
@@ -95,6 +96,6 @@ packaging-tool pin is also enforced in `.github/workflows/android.yml`.
 - **Rust:** none beyond `rustup` — the toolchain file installs `1.98.1` on first `cargo` run.
 - **Apple:** Xcode `26.6.x`; `swift format` ships with the toolchain; `swiftlint` via
   the pinned `tools/ci/install-apple-tools.sh` helper; it also installs XcodeGen and xcbeautify.
-- **Android:** JDK `21`; the Android SDK (`compileSdk 37`, build-tools, NDK per the table)
+- **Android:** JDK `21` or newer (CI runs JDK `25`); the Android SDK (`compileSdk 37`, build-tools, NDK per the table)
   via the SDK manager, `ANDROID_HOME` exported. Gradle itself comes from the committed
   wrapper (`./gradlew`).
