@@ -27,7 +27,7 @@ defaults:
     shell: bash
 jobs:
   android:
-    runs-on: ubuntu-24.04
+    runs-on: ubuntu-26.04
     timeout-minutes: 60
     steps:
       - uses: actions/checkout@v7.0.1
@@ -157,7 +157,7 @@ jobs:
       - name: Reject tracked-file mutation
         run: git diff --exit-code HEAD
   contract:
-    runs-on: ubuntu-24.04
+    runs-on: ubuntu-26.04
     timeout-minutes: 30
     steps:
       - uses: actions/checkout@v7.0.1

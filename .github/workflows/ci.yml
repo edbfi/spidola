@@ -21,7 +21,7 @@ concurrency:
   cancel-in-progress: true
 jobs:
   guard:
-    runs-on: ubuntu-24.04
+    runs-on: ubuntu-26.04
     timeout-minutes: 5
     steps:
       - uses: edbfi/automation/actions/dispatch-guard@v2.0.0
@@ -39,7 +39,7 @@ jobs:
     uses: ./.github/workflows/apple.yml
   hygiene:
     needs: guard
-    runs-on: ubuntu-24.04
+    runs-on: ubuntu-26.04
     timeout-minutes: 15
     steps:
       - uses: actions/checkout@v7.0.1
@@ -76,7 +76,7 @@ jobs:
       - android
       - apple
       - hygiene
-    runs-on: ubuntu-24.04
+    runs-on: ubuntu-26.04
     timeout-minutes: 5
     steps:
       - uses: edbfi/automation/actions/dispatch-guard@v2.0.0
