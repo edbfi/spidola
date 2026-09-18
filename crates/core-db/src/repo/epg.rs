@@ -336,7 +336,10 @@ pub fn now_next_batch(
 
     let mut statement = conn.prepare(&sql)?;
     let rows = statement.query_map(params_from_iter(values), |row| {
-        Ok((row.get::<_, usize>("ordinal")?, map_entry(row)?))
+        let value = row.get::<_, i64>("ordinal")?;
+        let ordinal = usize::try_from(value)
+            .map_err(|_| rusqlite::Error::IntegralValueOutOfRange(0, value))?;
+        Ok((ordinal, map_entry(row)?))
     })?;
     let mut upcoming = vec![(None, None); channels.len()];
     for row in rows {

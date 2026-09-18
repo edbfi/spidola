@@ -14,7 +14,7 @@ use core_model::{
     StreamLocator,
 };
 use core_parse::{EpgWindow, ParsedProgramme, ProgrammeSink, XmltvParseError, XmltvParser};
-use rand::Rng as _;
+use rand::RngExt as _;
 use tokio::sync::mpsc;
 use tracing::{instrument, warn};
 

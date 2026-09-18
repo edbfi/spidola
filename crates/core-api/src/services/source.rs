@@ -23,7 +23,7 @@ use core_model::locator::StreamLocator;
 use core_model::secret::Secret;
 use core_model::source::{Source as DomainSource, SourceCommon as DomainCommon};
 use core_xtream::Endpoint;
-use rand::Rng;
+use rand::RngExt;
 use tracing::warn;
 
 use crate::error::{ApiError, InputField, InputIssue};
