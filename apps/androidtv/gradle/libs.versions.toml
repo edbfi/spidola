@@ -15,7 +15,7 @@ targetSdk = "36"
 minSdk = "26"
 
 # Advisory lint tooling (runs in the Android CI lane + prek).
-ktlint = "12.3.0"
+ktlint = "14.2.0"
 detekt = "1.23.8"
 detektCompose = "0.6.6"
 licensee = "1.14.1"
