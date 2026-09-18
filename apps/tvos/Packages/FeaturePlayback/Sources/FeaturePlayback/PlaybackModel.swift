@@ -117,9 +117,11 @@ public final class PlaybackModel {
     guard let target else { return }
     await play(target, engineOverride: nil)
     if let channel {
-      async let _ = loadGuide(for: channel)
-      async let _ = loadWindow()
-      async let _ = recordRecent()
+      async let guide: Void = loadGuide(for: channel)
+      async let window: Void = loadWindow()
+      async let recent: Void = recordRecent()
+      // Explicitly await the children: leaving their scope implicitly cancels unfinished work.
+      _ = await (guide, window, recent)
     }
   }
 
@@ -133,9 +135,10 @@ public final class PlaybackModel {
     // The window is refreshed after the stream is loading, not before: the peek is cosmetic and
     // must never sit between a D-pad press and video.
     await play(.catalog(targetChannel), engineOverride: nil)
-    async let _ = loadGuide(for: targetChannel)
-    async let _ = loadWindow()
-    async let _ = recordRecent()
+    async let guide: Void = loadGuide(for: targetChannel)
+    async let window: Void = loadWindow()
+    async let recent: Void = recordRecent()
+    _ = await (guide, window, recent)
   }
 
   /// Accepts the loud-fallback offer, optionally remembering the choice for this channel.

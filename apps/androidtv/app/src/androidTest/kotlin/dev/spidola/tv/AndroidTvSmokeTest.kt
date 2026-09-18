@@ -60,7 +60,7 @@ class AndroidTvSmokeTest {
     fun coldLaunchSeedsFixtureDrillDownAndMovesFocus() {
         // Home: the fixture source is the first focusable element.
         composeRule.waitUntil(timeoutMillis = STARTUP_TIMEOUT_MS) {
-            composeRule.onAllNodes(hasTestTag(SOURCE_TAG)).fetchSemanticsNodes().size == 1
+            composeRule.onAllNodes(hasTestTag(SOURCE_TAG)).fetchSemanticsNodes(atLeastOneRootRequired = false).size == 1
         }
         composeRule.onNodeWithTag(SOURCE_TAG).assertIsFocused()
         composeRule.onRoot().performKeyInput { pressKey(Key.DirectionCenter) }
@@ -90,7 +90,7 @@ class AndroidTvSmokeTest {
     @Test
     fun addSourceFormKeepsDpadNavigationAfterTyping() {
         composeRule.waitUntil(timeoutMillis = STARTUP_TIMEOUT_MS) {
-            composeRule.onAllNodes(hasTestTag(SOURCE_TAG)).fetchSemanticsNodes().size == 1
+            composeRule.onAllNodes(hasTestTag(SOURCE_TAG)).fetchSemanticsNodes(atLeastOneRootRequired = false).size == 1
         }
         openManageSourcesFromHome()
         composeRule.waitUntil(timeoutMillis = NAV_TIMEOUT_MS) {
@@ -125,7 +125,7 @@ class AndroidTvSmokeTest {
     @Test
     fun addSourceCredentialsAreNotRestored() {
         composeRule.waitUntil(timeoutMillis = STARTUP_TIMEOUT_MS) {
-            composeRule.onAllNodes(hasTestTag(SOURCE_TAG)).fetchSemanticsNodes().size == 1
+            composeRule.onAllNodes(hasTestTag(SOURCE_TAG)).fetchSemanticsNodes(atLeastOneRootRequired = false).size == 1
         }
         openManageSourcesFromHome()
         composeRule.waitUntil(timeoutMillis = NAV_TIMEOUT_MS) {
@@ -174,7 +174,7 @@ class AndroidTvSmokeTest {
     @Test
     fun completedImportReloadsRetainedSourceLists() {
         composeRule.waitUntil(timeoutMillis = STARTUP_TIMEOUT_MS) {
-            composeRule.onAllNodes(hasTestTag(SOURCE_TAG)).fetchSemanticsNodes().size == 1
+            composeRule.onAllNodes(hasTestTag(SOURCE_TAG)).fetchSemanticsNodes(atLeastOneRootRequired = false).size == 1
         }
         openManageSourcesFromHome()
         composeRule.waitUntil(timeoutMillis = NAV_TIMEOUT_MS) {
@@ -193,7 +193,7 @@ class AndroidTvSmokeTest {
             .onNodeWithTag(CONTENT_TAG, useUnmergedTree = true)
             .performClick()
             .performTextInput(TEST_PLAYLIST)
-        composeRule.onNodeWithTag(SUBMIT_TAG).performSemanticsAction(SemanticsActions.OnClick)
+        activateRemoteButton(SUBMIT_TAG)
 
         composeRule.waitUntil(timeoutMillis = NAV_TIMEOUT_MS) {
             composeRule.onAllNodes(hasTestTag(DONE_TAG)).fetchSemanticsNodes().size == 1
@@ -207,7 +207,7 @@ class AndroidTvSmokeTest {
                     .single { it.name == testSourceName }
                     .id
             }
-        composeRule.onNodeWithTag(DONE_TAG).performSemanticsAction(SemanticsActions.OnClick)
+        activateRemoteButton(DONE_TAG)
         composeRule.waitUntil(timeoutMillis = NAV_TIMEOUT_MS) {
             composeRule.onAllNodes(hasTestTag("manage-source-$testSourceName")).fetchSemanticsNodes().size == 1 &&
                 composeRule.onAllNodes(hasTestTag(DONE_TAG)).fetchSemanticsNodes().isEmpty()
@@ -236,6 +236,15 @@ class AndroidTvSmokeTest {
             .getInstance()
             .openOutputFile(SCREENSHOT_FILE_NAME)
             .use { output -> check(screenshot.compress(Bitmap.CompressFormat.PNG, 100, output)) }
+    }
+
+    /** Activate a TV button with focus, rather than leaving the outgoing text field focused. */
+    private fun activateRemoteButton(tag: String) {
+        composeRule.onNodeWithTag(tag).performSemanticsAction(SemanticsActions.RequestFocus) { requestFocus ->
+            check(requestFocus())
+        }
+        composeRule.onNodeWithTag(tag).assertIsFocused()
+        composeRule.onRoot().performKeyInput { pressKey(Key.DirectionCenter) }
     }
 
     private fun pressRemoteKey(keyCode: Int) {

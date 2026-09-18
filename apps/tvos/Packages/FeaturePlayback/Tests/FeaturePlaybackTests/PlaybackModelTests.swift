@@ -264,13 +264,70 @@ final class PlaybackModelTests: XCTestCase {
     XCTAssertEqual(model.channel?.identity, 10)
   }
 
+  func testDelayedGuideCompletesAfterStreamStarts() async {
+    let harness = Harness()
+    harness.access.heldGuideIdentity = 10
+    let model = harness.model()
+    let start = Task { await model.start() }
+    await waitForHeldGuide(harness.access, model: model)
+    XCTAssertEqual(harness.engines.first?.loaded.count, 1)
+    XCTAssertNil(model.nowNext.current)
+
+    harness.access.releaseHeldGuide()
+    await start.value
+    XCTAssertEqual(model.nowNext.current?.title, "Current 10")
+  }
+
+  func testDelayedGuideCompletesAfterZapStartsTheNextStream() async {
+    let harness = Harness()
+    let model = harness.model()
+    await model.start()
+    harness.access.heldGuideIdentity = 11
+
+    let zap = Task { await model.zap(.next) }
+    await waitForHeldGuide(harness.access, model: model)
+    XCTAssertEqual(model.channel?.identity, 11)
+    XCTAssertEqual(harness.engines.count, 2)
+    XCTAssertNil(model.nowNext.current)
+
+    harness.access.releaseHeldGuide()
+    await zap.value
+    XCTAssertEqual(model.nowNext.current?.title, "Current 11")
+  }
+
+  func testCancelledGuideCannotPublish() async {
+    let harness = Harness()
+    harness.access.heldGuideIdentity = 10
+    let model = harness.model()
+    let start = Task { await model.start() }
+    await waitForHeldGuide(harness.access, model: model)
+
+    start.cancel()
+    harness.access.releaseHeldGuide()
+    await start.value
+    XCTAssertNil(model.nowNext.current)
+  }
+
+  func testStoppedGuideCannotPublish() async {
+    let harness = Harness()
+    harness.access.heldGuideIdentity = 10
+    let model = harness.model()
+    let start = Task { await model.start() }
+    await waitForHeldGuide(harness.access, model: model)
+
+    model.stop()
+    harness.access.releaseHeldGuide()
+    await start.value
+    XCTAssertNil(model.nowNext.current)
+  }
+
   func testGuideFollowsZapAndAStaleFirstLookupCannotOverwriteIt() async {
     let harness = Harness()
     harness.access.heldGuideIdentity = 10
     let model = harness.model()
 
     let start = Task { await model.start() }
-    await settle()
+    await waitForHeldGuide(harness.access, model: model)
     XCTAssertEqual(harness.access.guideCalls, [10])
 
     await model.zap(.next)
@@ -330,6 +387,15 @@ final class PlaybackModelTests: XCTestCase {
     await model.start()
     await settle()
     XCTAssertEqual(harness.access.recorded.map(\.identity), [10])
+  }
+
+  private func waitForHeldGuide(_ access: FakePlaybackAccess, model: PlaybackModel) async {
+    let deadline = ContinuousClock.now.advanced(by: .seconds(2))
+    while (!access.isGuideHeld || model.window == nil) && ContinuousClock.now < deadline {
+      await Task.yield()
+    }
+    XCTAssertTrue(access.isGuideHeld, "the guide lookup must be suspended before releasing it")
+    XCTAssertNotNil(model.window, "the zap window must be loaded before navigating")
   }
 
   /// A fixed number of executor yields cannot prove that the state stream was consumed.
@@ -421,6 +487,7 @@ private final class FakePlaybackAccess: PlaybackAccess, EpgAccess {
   var guideCalls: [Int64] = []
   var heldGuideIdentity: Int64?
   private var heldGuide: CheckedContinuation<Void, Never>?
+  var isGuideHeld: Bool { heldGuide != nil }
 
   func zapWindow(context: ZapContext, offset: UInt32) async throws -> ZapWindow? {
     let identity = windowIdentityOverride ?? Int64(10 + offset)
