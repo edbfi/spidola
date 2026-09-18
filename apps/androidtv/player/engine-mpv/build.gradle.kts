@@ -3,7 +3,6 @@
 
 plugins {
     alias(libs.plugins.android.library)
-    alias(libs.plugins.kotlin.android)
     alias(libs.plugins.kotlin.compose)
 }
 
@@ -79,9 +78,6 @@ android {
                 version = "3.22.1"
             }
         }
-        // libmpv.so is IMPORTED by CMake, not built by it, so it is not packaged automatically.
-        // Without this the shim would load against a library that is not in the APK.
-        sourceSets["main"].jniLibs.srcDir(libmpvDist)
     }
 
     compileOptions {
@@ -110,6 +106,13 @@ android {
     }
 }
 
+androidComponents.onVariants { variant ->
+    if (hasLibmpv) {
+        // Imported libmpv is not packaged by CMake; include it explicitly in the AAR.
+        variant.sources.jniLibs?.addStaticSourceDirectory(libmpvDist.path)
+    }
+}
+
 kotlin {
     jvmToolchain(21)
 }
@@ -126,9 +129,10 @@ dependencies {
     implementation(libs.kotlinx.collections.immutable)
     implementation(libs.kotlinx.coroutines)
 
-    testImplementation(kotlin("test"))
+    testImplementation(kotlin("test-junit5"))
     testImplementation(libs.junit5.api)
     testRuntimeOnly(libs.junit5.engine)
+    testRuntimeOnly(libs.junit5.launcher)
     testImplementation(libs.mockk)
 }
 

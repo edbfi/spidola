@@ -3,7 +3,6 @@
 
 plugins {
     alias(libs.plugins.android.library)
-    alias(libs.plugins.kotlin.android)
     alias(libs.plugins.kotlin.compose)
 }
 
@@ -54,9 +53,10 @@ dependencies {
 
     // The slice is tested against the contract's `FakeEngine` and a fake corekit (TECH_SPEC §10),
     // mirroring the tvOS suite — no decoder, no network, no timing, and so nothing to mock.
-    testImplementation(kotlin("test"))
+    testImplementation(kotlin("test-junit5"))
     testImplementation(libs.junit5.api)
     testRuntimeOnly(libs.junit5.engine)
+    testRuntimeOnly(libs.junit5.launcher)
     testImplementation(libs.kotlinx.coroutines.test)
 }
 
