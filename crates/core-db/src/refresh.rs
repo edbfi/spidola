@@ -243,7 +243,8 @@ impl Staging {
         // Count staged rows before the swap so we can report how many the `INSERT OR IGNORE`
         // below coalesces away (duplicate `(source_id, identity)` within this batch).
         let staged = conn.query_row("SELECT COUNT(*) FROM stg._refresh_staging", [], |row| {
-            row.get::<_, u64>(0)
+            let count = row.get::<_, i64>(0)?;
+            u64::try_from(count).map_err(|_| rusqlite::Error::IntegralValueOutOfRange(0, count))
         })?;
         conn.execute(
             "DELETE FROM channels WHERE source_id = ?1",

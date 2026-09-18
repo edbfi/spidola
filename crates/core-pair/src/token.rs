@@ -16,7 +16,7 @@
 //! while a person is looking at the screen. Six characters is what a person will actually
 //! type; the peer check and the lifetime bound are what make six characters enough.
 
-use rand::Rng;
+use rand::RngExt;
 
 /// Characters a person can read off a TV and type on a phone without a second guess.
 ///

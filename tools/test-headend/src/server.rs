@@ -468,7 +468,7 @@ fn serve_decoder_failure(stream: &mut TcpStream, config: &Config) -> io::Result<
     // framing intact while damaging every video sample. The result is a valid transport stream
     // whose only media payload cannot produce playback.
     let mut body = Vec::with_capacity(source.len());
-    for packet in source.chunks_exact(TS_PACKET_BYTES) {
+    for packet in source.as_chunks::<TS_PACKET_BYTES>().0 {
         if transport_stream_pid(packet) != Some(FIXTURE_AUDIO_PID) {
             body.extend_from_slice(packet);
         }
