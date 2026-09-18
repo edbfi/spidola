@@ -7,10 +7,10 @@
 # (Compose for TV, Media3, Navigation 3, Hilt) and are intentionally unused in Phase 0.
 
 [versions]
-agp = "8.13.0"
+agp = "9.4.0"
 kotlin = "2.4.0"
 ksp = "2.3.10"
-compileSdk = "36"
+compileSdk = "37"
 targetSdk = "36"
 minSdk = "26"
 
@@ -74,6 +74,8 @@ coil-network-okhttp = { module = "io.coil-kt.coil3:coil-network-okhttp", version
 detekt-compose = { module = "io.nlopez.compose.rules:detekt", version.ref = "detektCompose" }
 junit5-api = { module = "org.junit.jupiter:junit-jupiter-api", version.ref = "junit5" }
 junit5-engine = { module = "org.junit.jupiter:junit-jupiter-engine", version.ref = "junit5" }
+# Version is aligned by the JUnit BOM imported by junit-jupiter-engine.
+junit5-launcher = { module = "org.junit.platform:junit-platform-launcher" }
 mockk = { module = "io.mockk:mockk", version.ref = "mockk" }
 kotlinx-coroutines-test = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-test", version.ref = "coroutines" }
 turbine = { module = "app.cash.turbine:turbine", version.ref = "turbine" }
@@ -84,7 +86,6 @@ androidx-test-orchestrator = { module = "androidx.test:orchestrator", version.re
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }
 android-library = { id = "com.android.library", version.ref = "agp" }
-kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
 kotlin-compose = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlin" }
 kotlin-serialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlin" }
 ksp = { id = "com.google.devtools.ksp", version.ref = "ksp" }
