@@ -61,7 +61,7 @@ impl HttpClient {
             .timeout(config.request_timeout)
             .redirect(Policy::limited(config.max_redirects))
             .user_agent(config.default_user_agent.clone());
-        let builder = tls::apply(builder, config.accept_invalid_tls);
+        let builder = tls::apply(builder, config.accept_invalid_tls).map_err(FetchError::Build)?;
         let inner = builder.build().map_err(FetchError::Build)?;
         Ok(Self { inner })
     }

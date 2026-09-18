@@ -14,10 +14,14 @@ publish = false
 
 [dependencies]
 reqwest = { workspace = true }
+rustls-native-certs = { workspace = true }
+webpki-root-certs = { workspace = true }
 thiserror = { workspace = true }
 tracing = { workspace = true }
 
 [dev-dependencies]
+rcgen = { workspace = true }
+rustls = { workspace = true }
 tokio = { workspace = true }
 
 [lints]
