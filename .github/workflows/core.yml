@@ -21,7 +21,7 @@ concurrency:
 
 jobs:
   rust:
-    runs-on: ubuntu-24.04
+    runs-on: ubuntu-26.04
     steps:
       - uses: actions/checkout@v7.0.1
 
@@ -57,7 +57,7 @@ jobs:
     timeout-minutes: 45
   performance:
     name: Criterion regression gate
-    runs-on: ubuntu-24.04
+    runs-on: ubuntu-26.04
     env:
       CRITERION_TARGET_DIR: ${{ github.workspace }}/target/criterion-gate
     steps:
@@ -148,7 +148,7 @@ jobs:
           if-no-files-found: warn
     timeout-minutes: 60
   reuse:
-    runs-on: ubuntu-24.04
+    runs-on: ubuntu-26.04
     steps:
       - uses: actions/checkout@v7.0.1
         with:
