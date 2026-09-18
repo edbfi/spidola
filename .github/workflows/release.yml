@@ -37,7 +37,7 @@ jobs:
           verify-signature: true
           java-version: "25"
 
-      - uses: android-actions/setup-android@v4.0.1
+      - uses: android-actions/setup-android@v4.0.4
       - uses: gradle/actions/setup-gradle@v6.3.0
       - uses: Swatinem/rust-cache@v2.9.2
 

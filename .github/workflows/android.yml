@@ -65,7 +65,7 @@ jobs:
           verify-signature: true
           java-version: "25"
 
-      - uses: android-actions/setup-android@v4.0.1
+      - uses: android-actions/setup-android@v4.0.4
         with:
           packages: platform-tools
 
