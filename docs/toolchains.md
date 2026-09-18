@@ -75,17 +75,17 @@ packaging-tool pin is also enforced in `.github/workflows/android.yml`.
 | Item | Pin |
 |---|---|
 | JDK (Gradle toolchain) | **21** (Temurin/OpenJDK LTS) |
-| Kotlin | **2.4.0** (K2-only compiler; `org.jetbrains.kotlin.plugin.compose`) |
-| KSP | **2.3.10** (KSP2 unified versioning, Kotlin 2.4.0 support; never KAPT) |
+| Kotlin | **2.4.20** (K2-only compiler; `org.jetbrains.kotlin.plugin.compose`) |
+| KSP | **2.3.12** (KSP2 unified versioning; never KAPT) |
 | Android Gradle Plugin | **9.4.0** |
-| Gradle | **9.6.0** (`gradle-wrapper.properties`) |
+| Gradle | **9.7.1** (`gradle-wrapper.properties`) |
 | compileSdk / targetSdk | **37** / **36** |
 | minSdk | **26** |
 | NDK | **28.2.13676358** (per-ABI core + libmpv builds, `tools/build-libmpv-android/`) |
 | cargo-ndk | **4.1.2** (Android native packaging) |
 | Compose for TV | `androidx.tv:tv-material` **1.1.x** on foundation lazy layouts |
 | Navigation | Navigation 3 (`androidx.navigation3`) |
-| Default / fallback player | Media3 ExoPlayer **1.10.x** (`media3-ui-compose`) / libmpv (JNI) |
+| Default / fallback player | Media3 ExoPlayer **1.11.x** (`media3-ui-compose`) / libmpv (JNI) |
 | DI | Manual constructor composition accepted for M0; Hilt with KSP2 is the post-M0 production-hardening target |
 
 > Android device/emulator ABIs: `arm64-v8a`, `armeabi-v7a` (devices) and `x86_64` (emulator).
