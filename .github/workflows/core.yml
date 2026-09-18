@@ -67,8 +67,8 @@ jobs:
 
           persist-credentials: false
       - uses: actions-rust-lang/setup-rust-toolchain@v2.0.0
-      - name: Unit-test regression comparison
-        run: python3 -B tools/ci/test_criterion_regression.py
+      - name: Unit-test CI guards and regression comparison
+        run: python3 -B -m unittest discover -s tools/ci -p 'test_*.py'
 
       - name: Check out pull-request base
         if: github.event_name == 'pull_request'

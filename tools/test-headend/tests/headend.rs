@@ -141,10 +141,12 @@ fn decoder_failure_preserves_transport_framing_while_corrupting_video() {
     assert!(body.len() < original.len());
     assert_ne!(body, original);
     assert!(
-        body.chunks_exact(188)
+        body.as_chunks::<188>()
+            .0
+            .iter()
             .all(|transport_packet| transport_packet[0] == 0x47)
     );
-    assert!(body.chunks_exact(188).all(|packet| {
+    assert!(body.as_chunks::<188>().0.iter().all(|packet| {
         let pid = (u16::from(packet[1] & 0x1f) << 8) | u16::from(packet[2]);
         pid != 0x101
     }));

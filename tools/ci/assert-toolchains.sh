@@ -11,7 +11,9 @@ set -euo pipefail
 fail() { echo "toolchain assertion failed: $*" >&2; exit 1; }
 
 # --- Rust (pinned by rust-toolchain.toml) ---
-want_rust="1.96.1"
+repo_root="$(cd "$(dirname "${BASH_SOURCE[0]}")/../.." && pwd)"
+want_rust="$(python3 -c 'import sys, tomllib; print(tomllib.load(open(sys.argv[1], "rb"))["toolchain"]["channel"])' "$repo_root/rust-toolchain.toml")"
+[[ "$want_rust" =~ ^[0-9]+\.[0-9]+\.[0-9]+$ ]] || fail "expected an exact stable Rust pin, found $want_rust"
 have_rust="$(rustc --version | awk '{print $2}')"
 [ "$have_rust" = "$want_rust" ] || fail "rustc $want_rust required, found $have_rust"
 echo "ok: rustc $have_rust"
