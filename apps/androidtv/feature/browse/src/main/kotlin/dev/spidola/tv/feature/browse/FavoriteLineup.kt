@@ -110,9 +110,10 @@ class FavoriteLineupViewModel(
     companion object {
         private const val PAGE_LIMIT = 200u
 
-        fun factory(access: HomeAccess): ViewModelProvider.Factory {
-            return viewModelFactory { initializer { FavoriteLineupViewModel(access) } }
-        }
+        fun factory(access: HomeAccess): ViewModelProvider.Factory =
+            viewModelFactory {
+                initializer { FavoriteLineupViewModel(access) }
+            }
     }
 }
 

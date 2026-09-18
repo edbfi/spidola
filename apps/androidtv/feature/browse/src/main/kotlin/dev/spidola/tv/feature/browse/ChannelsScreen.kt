@@ -106,8 +106,7 @@ private fun ChannelList(
                         // "not a favorite" a thousand times would bury the names they came for.
                         .then(
                             if (row.isFavorite) Modifier.semantics { stateDescription = favorite } else Modifier,
-                        )
-                        .testTag("channel-${row.channel.name}")
+                        ).testTag("channel-${row.channel.name}")
                         .then(if (row.key == rows.first().key) Modifier.focusRequester(firstRow) else Modifier),
             )
         }

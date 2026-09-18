@@ -82,7 +82,8 @@ internal val BufferingProfile.durations: BufferDurations
 
 internal fun BufferingProfile.toLoadControl(): LoadControl =
     with(durations) {
-        DefaultLoadControl.Builder()
+        DefaultLoadControl
+            .Builder()
             .setBufferDurationsMs(
                 minBufferMs,
                 maxBufferMs,

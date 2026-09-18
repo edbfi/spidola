@@ -25,7 +25,9 @@ import javax.crypto.spec.GCMParameterSpec
  *
  * UniFFI may call these methods from any core thread; access is serialized.
  */
-class KeystoreSecretStore(context: Context) : SecretStore {
+class KeystoreSecretStore(
+    context: Context,
+) : SecretStore {
     private val prefs =
         context.applicationContext.getSharedPreferences(PREFS_FILE, Context.MODE_PRIVATE)
     private val lock = Any()

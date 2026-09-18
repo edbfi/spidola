@@ -167,7 +167,11 @@ class TvContentPublisher(
     }
 
     private fun storedEntries(key: String): Map<String, Long> =
-        preferences.getStringSet(key, emptySet()).orEmpty().mapNotNull(::decodeStoredEntry).toMap()
+        preferences
+            .getStringSet(key, emptySet())
+            .orEmpty()
+            .mapNotNull(::decodeStoredEntry)
+            .toMap()
 
     private fun storeEntries(
         key: String,

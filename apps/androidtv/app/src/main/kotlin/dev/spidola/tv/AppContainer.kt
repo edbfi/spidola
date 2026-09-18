@@ -20,7 +20,9 @@ import dev.spidola.tv.player.enginempv.MpvEngine
  * else. This small graph is accepted for M0; Hilt/KSP2 remains the production-hardening target as
  * the graph grows (see IMPLEMENTATION_PLAN Phase 3).
  */
-class AppContainer(context: Context) {
+class AppContainer(
+    context: Context,
+) {
     private val appContext: Context = context.applicationContext
 
     val core: SpidolaCore =

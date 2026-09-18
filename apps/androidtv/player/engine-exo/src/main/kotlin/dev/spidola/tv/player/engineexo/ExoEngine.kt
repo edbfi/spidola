@@ -227,7 +227,8 @@ class ExoEngine(
 
     private fun buildPlayer(request: StreamRequest): ExoPlayer {
         val http =
-            DefaultHttpDataSource.Factory()
+            DefaultHttpDataSource
+                .Factory()
                 // IPTV origins routinely bounce a stream between http and https across their CDN.
                 .setAllowCrossProtocolRedirects(true)
                 .apply {
@@ -288,7 +289,10 @@ class ExoEngine(
 
         when (next) {
             is PlaybackState.Failed -> {
-                val detail = next.error.diagnosticDetail?.let { " — $it" }.orEmpty()
+                val detail =
+                    next.error.diagnosticDetail
+                        ?.let { " — $it" }
+                        .orEmpty()
                 Log.e(PLAYBACK_TAG, "exoplayer: $previous -> Failed(${next.error.failureClass})$detail")
             }
             else -> Log.i(PLAYBACK_TAG, "exoplayer: $previous -> $next")

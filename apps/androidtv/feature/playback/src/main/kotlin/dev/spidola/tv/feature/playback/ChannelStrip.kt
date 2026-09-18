@@ -272,9 +272,12 @@ private fun accessibilityLabel(
 internal val PlayableChannel.isLive: Boolean
     get() = kind == MediaKind.LIVE
 
-private fun Long.asTime(): String {
-    return DateFormat.getTimeInstance(DateFormat.SHORT).format(Date(this * UNIX_MILLIS_PER_SECOND))
-}
+private fun Long.asTime(): String =
+    DateFormat.getTimeInstance(DateFormat.SHORT).format(
+        Date(
+            this * UNIX_MILLIS_PER_SECOND,
+        ),
+    )
 
 private val LOGO_WIDTH = 120.dp
 

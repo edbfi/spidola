@@ -81,7 +81,10 @@ class PlaybackViewModelTest {
             advanceUntilIdle()
             assertEquals(
                 listOf("resolved://http://host.example/10.ts"),
-                harness.engines.first().loaded.map { it.locator },
+                harness.engines
+                    .first()
+                    .loaded
+                    .map { it.locator },
                 "the engine must be loaded with the resolver's URL, not the stored locator",
             )
             assertEquals(
@@ -89,10 +92,22 @@ class PlaybackViewModelTest {
                 harness.access.resolvedCalls,
                 "resolution must be asked for once per load, not cached",
             )
-            assertEquals("Resolved-Agent", harness.engines.first().loaded.first().userAgent)
+            assertEquals(
+                "Resolved-Agent",
+                harness.engines
+                    .first()
+                    .loaded
+                    .first()
+                    .userAgent,
+            )
             assertEquals(
                 listOf("Referer" to "https://portal.example/session"),
-                harness.engines.first().loaded.first().headers.map { it.name to it.value },
+                harness.engines
+                    .first()
+                    .loaded
+                    .first()
+                    .headers
+                    .map { it.name to it.value },
             )
         }
 
@@ -104,7 +119,13 @@ class PlaybackViewModelTest {
             val viewModel = harness.viewModel()
             viewModel.start()
             advanceUntilIdle()
-            assertTrue(harness.engines.single().loaded.isEmpty(), "no engine may receive an opaque envelope")
+            assertTrue(
+                harness.engines
+                    .single()
+                    .loaded
+                    .isEmpty(),
+                "no engine may receive an opaque envelope",
+            )
             assertTrue(harness.engines.single().isReleased, "a resolver failure must release the unused engine")
             assertNotNull(viewModel.state.value.playback.failure)
         }
@@ -131,8 +152,22 @@ class PlaybackViewModelTest {
 
             assertEquals(listOf(77L), harness.access.customResolvedCalls)
             assertTrue(harness.access.resolvedCalls.isEmpty())
-            assertEquals("resolved-custom://77", harness.engines.single().loaded.single().locator)
-            assertEquals("Custom-Agent", harness.engines.single().loaded.single().userAgent)
+            assertEquals(
+                "resolved-custom://77",
+                harness.engines
+                    .single()
+                    .loaded
+                    .single()
+                    .locator,
+            )
+            assertEquals(
+                "Custom-Agent",
+                harness.engines
+                    .single()
+                    .loaded
+                    .single()
+                    .userAgent,
+            )
             assertTrue(harness.access.recorded.isEmpty(), "custom request material must not enter recents")
         }
 
@@ -145,7 +180,12 @@ class PlaybackViewModelTest {
             advanceUntilIdle()
 
             assertEquals(listOf(1L to 10L), harness.access.nowNextCalls)
-            assertEquals("Evening News", viewModel.state.value.schedule?.current?.title)
+            assertEquals(
+                "Evening News",
+                viewModel.state.value.schedule
+                    ?.current
+                    ?.title,
+            )
             assertTrue(viewModel.state.value.scheduleLoaded)
         }
 
@@ -210,7 +250,11 @@ class PlaybackViewModelTest {
             advanceUntilIdle()
             harness.engines[0].simulate(PlaybackState.Failed(EngineError.UnsupportedFormat))
             advanceUntilIdle()
-            assertEquals(EngineId.MPV, viewModel.state.value.fallbackOffer?.alternate)
+            assertEquals(
+                EngineId.MPV,
+                viewModel.state.value.fallbackOffer
+                    ?.alternate,
+            )
         }
 
     @Test
@@ -222,7 +266,11 @@ class PlaybackViewModelTest {
             advanceUntilIdle()
             harness.engines[0].simulate(PlaybackState.Failed(EngineError.DecoderFailed))
             advanceUntilIdle()
-            assertEquals(EngineId.MPV, viewModel.state.value.fallbackOffer?.alternate)
+            assertEquals(
+                EngineId.MPV,
+                viewModel.state.value.fallbackOffer
+                    ?.alternate,
+            )
         }
 
     /** A network failure would fail identically on any engine — offering a swap would be a lie. */

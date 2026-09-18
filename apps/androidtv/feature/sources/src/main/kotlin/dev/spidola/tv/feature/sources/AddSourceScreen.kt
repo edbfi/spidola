@@ -281,8 +281,7 @@ private fun LabeledField(
                                 else -> false
                             }
                         }
-                    }
-                    .testTag(tag),
+                    }.testTag(tag),
         )
     }
 }

@@ -168,9 +168,8 @@ class GuideViewModel(
     companion object {
         private const val UNIX_MILLIS_PER_SECOND = 1_000L
 
-        fun factory(access: EpgAccess): ViewModelProvider.Factory {
-            return viewModelFactory { initializer { GuideViewModel(access) } }
-        }
+        fun factory(access: EpgAccess): ViewModelProvider.Factory =
+            viewModelFactory { initializer { GuideViewModel(access) } }
     }
 }
 

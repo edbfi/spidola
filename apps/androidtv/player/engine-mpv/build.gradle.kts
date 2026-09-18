@@ -13,7 +13,9 @@ val libmpvDist = rootProject.file("../../tools/build-libmpv-android/dist")
 val libmpvHeaders = File(libmpvDist, "include")
 
 val builtAbis =
-    libmpvDist.listFiles().orEmpty()
+    libmpvDist
+        .listFiles()
+        .orEmpty()
         .filter { File(it, "libmpv.so").isFile }
         .map { it.name }
         .sorted()
@@ -41,10 +43,16 @@ if (!hasLibmpv) {
 
 android {
     namespace = "dev.spidola.tv.player.enginempv"
-    compileSdk = libs.versions.compileSdk.get().toInt()
+    compileSdk =
+        libs.versions.compileSdk
+            .get()
+            .toInt()
 
     defaultConfig {
-        minSdk = libs.versions.minSdk.get().toInt()
+        minSdk =
+            libs.versions.minSdk
+                .get()
+                .toInt()
         // Ships with the AAR so any consumer that minifies inherits the JNI keep rules; the
         // shim resolves Kotlin by name at runtime, which R8 cannot see.
         consumerProguardFiles("consumer-rules.pro")

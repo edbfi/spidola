@@ -59,10 +59,12 @@ internal object MpvTrackMapping {
         return TrackSelection(
             available = tracks.toImmutableList(),
             selectedAudio =
-                playable.firstOrNull { it.type == TYPE_AUDIO && it.selected }
+                playable
+                    .firstOrNull { it.type == TYPE_AUDIO && it.selected }
                     ?.let { trackId(TrackKind.AUDIO, it.id) },
             selectedSubtitle =
-                playable.firstOrNull { it.type == TYPE_SUB && it.selected }
+                playable
+                    .firstOrNull { it.type == TYPE_SUB && it.selected }
                     ?.let { trackId(TrackKind.SUBTITLE, it.id) },
         )
     }
