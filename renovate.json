@@ -15,6 +15,22 @@
         "/mpv/i"
       ],
       "groupName": "LGPL media dependencies"
+    },
+    {
+      "description": "Gradle extraction mistakes the three ABI filter names for a Maven coordinate; these are Android architecture identifiers.",
+      "matchManagers": [
+        "gradle"
+      ],
+      "matchDatasources": [
+        "maven"
+      ],
+      "matchFileNames": [
+        "apps/androidtv/app/build.gradle.kts"
+      ],
+      "matchPackageNames": [
+        "arm64-v8a:armeabi-v7a"
+      ],
+      "enabled": false
     }
   ],
   "customManagers": [
