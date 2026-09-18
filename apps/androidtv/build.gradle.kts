@@ -13,8 +13,8 @@ plugins {
     alias(libs.plugins.licensee) apply false
 }
 
-// Toolchain assertion (TECH_SPEC §9: "build scripts assert them"). The pinned JDK is 21;
-// newer JDKs are accepted so contributors are not blocked by a point bump.
+// Toolchain assertion (TECH_SPEC §9: "build scripts assert them"). Compilation targets
+// JDK 21; newer runtimes are accepted, including the pinned CI runtime JDK 25.
 val minJdk = 21
 require(JavaVersion.current().majorVersion.toInt() >= minJdk) {
     "Spidola's Android build requires JDK $minJdk or newer (found ${JavaVersion.current()})."

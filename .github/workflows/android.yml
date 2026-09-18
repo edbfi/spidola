@@ -4,7 +4,8 @@
 # Android lane (TECH_SPEC §9): native core + APK, lint/static analysis, JVM tests, and a
 # real-core Android TV emulator smoke test.
 # Toolchain pins live in apps/androidtv/gradle/libs.versions.toml + the committed wrapper;
-# JDK is pinned to 21 (docs/toolchains.md). detekt/ktlint complexity rules are advisory
+# CI runs JDK 25; compilation targets JDK 21 (docs/toolchains.md).
+# detekt/ktlint complexity rules are advisory
 # (config/detekt/detekt.yml, modularity doctrine §3.1).
 name: android
 
