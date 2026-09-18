@@ -77,9 +77,9 @@ packaging-tool pin is also enforced in `.github/workflows/android.yml`.
 | JDK (Gradle toolchain) | **21** (Temurin/OpenJDK LTS) |
 | Kotlin | **2.4.0** (K2-only compiler; `org.jetbrains.kotlin.plugin.compose`) |
 | KSP | **2.3.10** (KSP2 unified versioning, Kotlin 2.4.0 support; never KAPT) |
-| Android Gradle Plugin | **8.13.0** |
-| Gradle | **8.14** (`gradle-wrapper.properties`) |
-| compileSdk / targetSdk | **36** |
+| Android Gradle Plugin | **9.4.0** |
+| Gradle | **9.6.0** (`gradle-wrapper.properties`) |
+| compileSdk / targetSdk | **37** / **36** |
 | minSdk | **26** |
 | NDK | **28.2.13676358** (per-ABI core + libmpv builds, `tools/build-libmpv-android/`) |
 | cargo-ndk | **4.1.2** (Android native packaging) |
@@ -95,6 +95,6 @@ packaging-tool pin is also enforced in `.github/workflows/android.yml`.
 - **Rust:** none beyond `rustup` — the toolchain file installs `1.96.1` on first `cargo` run.
 - **Apple:** Xcode `26.6.x`; `swift format` ships with the toolchain; `swiftlint` via
   the pinned `tools/ci/install-apple-tools.sh` helper; it also installs XcodeGen and xcbeautify.
-- **Android:** JDK `21`; the Android SDK (`compileSdk 36`, build-tools, NDK per the table)
+- **Android:** JDK `21`; the Android SDK (`compileSdk 37`, build-tools, NDK per the table)
   via the SDK manager, `ANDROID_HOME` exported. Gradle itself comes from the committed
   wrapper (`./gradlew`).
