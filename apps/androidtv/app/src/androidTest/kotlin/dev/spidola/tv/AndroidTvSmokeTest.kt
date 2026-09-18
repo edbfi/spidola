@@ -22,6 +22,8 @@ import androidx.compose.ui.test.performKeyInput
 import androidx.compose.ui.test.performSemanticsAction
 import androidx.compose.ui.test.performTextInput
 import androidx.compose.ui.test.pressKey
+import androidx.core.view.ViewCompat
+import androidx.core.view.WindowInsetsCompat
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.platform.app.InstrumentationRegistry
 import androidx.test.platform.io.PlatformTestStorageRegistry
@@ -204,7 +206,17 @@ class AndroidTvSmokeTest {
             }
         composeRule.onNodeWithTag(DONE_TAG).performSemanticsAction(SemanticsActions.OnClick)
         composeRule.waitUntil(timeoutMillis = NAV_TIMEOUT_MS) {
-            composeRule.onAllNodes(hasTestTag("manage-source-$testSourceName")).fetchSemanticsNodes().size == 1
+            composeRule.onAllNodes(hasTestTag("manage-source-$testSourceName")).fetchSemanticsNodes().size == 1 &&
+                composeRule.onAllNodes(hasTestTag(DONE_TAG)).fetchSemanticsNodes().isEmpty()
+        }
+        composeRule.onNodeWithTag("manage-source-$testSourceName").assertIsDisplayed()
+        // A raw remote Back event is outside Compose's input synchronization. Wait for the
+        // outgoing text editor's IME to finish hiding so Back navigates instead of dismissing it.
+        composeRule.waitUntil(timeoutMillis = NAV_TIMEOUT_MS) {
+            composeRule.runOnIdle {
+                ViewCompat.getRootWindowInsets(composeRule.activity.window.decorView)
+                    ?.isVisible(WindowInsetsCompat.Type.ime()) == false
+            }
         }
 
         pressRemoteKey(KeyEvent.KEYCODE_BACK)
