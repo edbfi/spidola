@@ -21,7 +21,7 @@ let package = Package(
   ],
   dependencies: [
     .package(path: "../PlayerContract"),
-    .package(url: "https://github.com/mpvkit/MPVKit.git", exact: "0.41.0"),
+    .package(url: "https://github.com/mpvkit/MPVKit.git", exact: "1.0.0"),
   ],
   targets: [
     .target(

@@ -11,7 +11,7 @@ The pinned MPVKit build consumed by the tvOS `PlayerMPV` engine — libmpv plus 
 | | |
 |---|---|
 | Upstream | <https://github.com/mpvkit/MPVKit> |
-| Pin | `0.41.0` (mpv 0.41.0, FFmpeg n8.0.1) |
+| Pin | `1.0.0` (mpv 0.41.0, FFmpeg n8.1.2) |
 | Product linked | **`MPVKit`** — the LGPL build |
 | Product forbidden | `MPVKit-GPL` |
 | Artifacts | 29 binary xcframeworks, checksummed in [`mpvkit.lock`](./mpvkit.lock) |
@@ -66,7 +66,7 @@ LGPLv3 — is decided and accepted in PRD §10.
 
 `mpvkit.lock` pins the version and the sha256 of **every binary artifact the LGPL product links** —
 the transitive closure of the `_MPVKit` target, computed from MPVKit's own `Package.swift` at the
-pinned tag. `Libmpv` is `9ff5077d…`; the other 28 are listed alongside it.
+pinned tag. `Libmpv` is `c381ceb4…`; the other 28 are listed alongside it.
 
 Two honest caveats:
 
@@ -94,7 +94,7 @@ MPVKit builds through its own tooling. From a checkout of the pinned tag:
 ```bash
 git clone https://github.com/mpvkit/MPVKit.git
 cd MPVKit
-git checkout 0.41.0
+git checkout 1.0.0
 
 # The LGPL build. `make build` is the LGPL path; `make gpl` is the one we must not take.
 make build platform=tvos,tvsimulator
@@ -104,7 +104,7 @@ make build platform=tvos,tvsimulator
 
 `make build` shells out to `swift run --package-path Sources/BuildScripts build`, which fetches
 each upstream source at its pinned version and configures it. The flags that make this the LGPL
-build, as recorded in `Sources/BuildScripts/XCFrameworkBuild/main.swift` at `0.41.0`:
+build, as recorded in `Sources/BuildScripts/XCFrameworkBuild/main.swift` at `1.0.0`:
 
 | Component | Flag | Effect |
 |---|---|---|
@@ -118,7 +118,7 @@ To confirm a rebuild matches the pin, checksum the output the way SwiftPM does a
 
 ```bash
 swift package compute-checksum dist/release/Libmpv.xcframework.zip
-# expect: 9ff5077d675a1e12bec98db167a49f46eb57dba567f40558b7758d4f12fb3ae7
+# expect: c381ceb4c1504efac12da95293e56585bbeb691634aa64e3a729f517169933ba
 ```
 
 Byte-identical output is not guaranteed — these builds are not reproducible in the strict sense
