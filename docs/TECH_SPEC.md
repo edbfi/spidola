@@ -13,7 +13,7 @@
 
 | Layer | tvOS | Android TV | Shared |
 |---|---|---|---|
-| Language | Swift 6.3+ (Swift 6 language mode, strict concurrency) | Kotlin 2.4 (K2-only compiler) | Rust 1.96.1, edition 2024 |
+| Language | Swift 6.3+ (Swift 6 language mode, strict concurrency) | Kotlin 2.4 (K2-only compiler) | Rust 1.98.1, edition 2024 (MSRV 1.96.1) |
 | UI | SwiftUI + Observation framework | Jetpack Compose for TV (`androidx.tv:tv-material` 1.1.x on foundation lazy layouts) | — |
 | Navigation | State-driven NavigationStack | Navigation 3 (`androidx.navigation3`, back stack as state) | — |
 | Default player | MPVKit (libmpv + LGPL FFmpeg xcframeworks) | Media3 ExoPlayer 1.10.x (`media3-ui-compose` PlayerSurface) | Common engine abstraction (§8) |
@@ -57,7 +57,7 @@ The suggested structure, to the depth that carries meaning (leaf files listed wh
 ```text
 spidola/
 ├── Cargo.toml                     # virtual workspace manifest (resolver 3, workspace deps & lints)
-├── rust-toolchain.toml            # pins Rust 1.96.1
+├── rust-toolchain.toml            # pins Rust 1.98.1
 ├── deny.toml                      # cargo-deny: advisories + license allow-list
 ├── .github/workflows/             # core / android / apple / release lanes
 ├── .agents/rules/                # normative coding standards, enforced in review
@@ -257,7 +257,7 @@ Engine selection policy, identical on both platforms: resolve per-channel overri
 
 ## 9. Build, toolchains, and CI
 
-Toolchains are pinned: Rust 1.96.1 via rust-toolchain file; Xcode and Android SDK/NDK versions recorded in `docs/toolchains` and asserted by build scripts. Apple targets: the core builds for aarch64-apple-tvos plus the simulator variant, packaged with generated Swift bindings into an XCFramework by `xtask`. These targets were recently promoted from Tier 3 to **Tier 2** in upstream Rust, which means prebuilt standard libraries and guaranteed-to-build status; the build documentation records the first stable toolchain shipping that promotion, and retains the previous procedure (nightly with build-std) as a documented fallback should the pin ever sit behind it. Android targets: cargo-ndk builds the three ABIs into a prefab/AAR consumed by Gradle. A reproducibility check in CI rebuilds bindings and fails on drift between Rust definitions and committed release artifacts.
+Toolchains are pinned: Rust 1.98.1 via rust-toolchain file; Xcode and Android SDK/NDK versions recorded in `docs/toolchains` and asserted by build scripts. Apple targets: the core builds for aarch64-apple-tvos plus the simulator variant, packaged with generated Swift bindings into an XCFramework by `xtask`. These targets were recently promoted from Tier 3 to **Tier 2** in upstream Rust, which means prebuilt standard libraries and guaranteed-to-build status; the build documentation records the first stable toolchain shipping that promotion, and retains the previous procedure (nightly with build-std) as a documented fallback should the pin ever sit behind it. Android targets: cargo-ndk builds the three ABIs into a prefab/AAR consumed by Gradle. A reproducibility check in CI rebuilds bindings and fails on drift between Rust definitions and committed release artifacts.
 
 CI is GitHub Actions, three lanes. The **core lane** (Linux) runs rustfmt check, clippy with the workspace lint set at deny-warnings, unit and property tests, the fixture-corpus parser tests, and cargo-deny (advisories plus the license policy in §12). The **Android lane** builds the AAR and app, runs ktlint and detekt (with the Compose ruleset), JVM unit tests, and a small Compose-for-TV instrumentation suite on an emulator including a D-pad traversal smoke test. The **Apple lane** (macOS) builds the XCFramework and app, runs swift-format and SwiftLint checks, Swift Testing unit suites, and a simulator UI smoke test. Release workflows produce signed store artifacts plus, for Android, the direct-release APK attached to a GitHub release with checksums; every release artifact embeds the exact core git revision, surfaced on the diagnostics screen.
 

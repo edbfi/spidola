@@ -10,7 +10,7 @@
 
 <p align="center">
   <a href="https://github.com/edbfi/spidola/blob/main/LICENSE"><img src="https://img.shields.io/badge/license-AGPL--3.0--or--later-blue.svg" alt="License"></a>
-  <img src="https://img.shields.io/badge/Rust-1.96.1-000000?logo=rust&logoColor=white" alt="Rust 1.96.1">
+  <img src="https://img.shields.io/badge/Rust-1.98.1-000000?logo=rust&logoColor=white" alt="Rust 1.98.1">
   <img src="https://img.shields.io/badge/Swift-6.3.3-F05138?logo=swift&logoColor=white" alt="Swift 6.3.3">
   <img src="https://img.shields.io/badge/Kotlin-2.4.0-7F52FF?logo=kotlin&logoColor=white" alt="Kotlin 2.4.0">
   <img src="https://img.shields.io/badge/tvOS-18%2B-000000?logo=apple&logoColor=white" alt="tvOS 18 or later">

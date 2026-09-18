@@ -11,7 +11,8 @@ set -euo pipefail
 fail() { echo "toolchain assertion failed: $*" >&2; exit 1; }
 
 # --- Rust (pinned by rust-toolchain.toml) ---
-want_rust="1.96.1"
+want_rust="$(sed -nE 's/^[[:space:]]*channel[[:space:]]*=[[:space:]]*"([0-9]+\.[0-9]+\.[0-9]+)"[[:space:]]*$/\1/p' rust-toolchain.toml)"
+[[ "$want_rust" =~ ^[0-9]+\.[0-9]+\.[0-9]+$ ]] || fail "rust-toolchain.toml must pin one exact stable Rust version"
 have_rust="$(rustc --version | awk '{print $2}')"
 [ "$have_rust" = "$want_rust" ] || fail "rustc $want_rust required, found $have_rust"
 echo "ok: rustc $have_rust"
