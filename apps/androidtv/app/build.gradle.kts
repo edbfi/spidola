@@ -3,7 +3,6 @@
 
 plugins {
     alias(libs.plugins.android.application)
-    alias(libs.plugins.kotlin.android)
     alias(libs.plugins.kotlin.compose)
     alias(libs.plugins.kotlin.serialization)
     alias(libs.plugins.licensee)
@@ -49,13 +48,30 @@ val configuredVersionCode =
     providers.gradleProperty("spidolaVersionCode").orNull?.toIntOrNull() ?: 1
 require(configuredVersionCode > 0) { "spidolaVersionCode must be a positive integer." }
 val configuredVersionName = providers.gradleProperty("spidolaVersionName").orNull ?: "0.0.0"
-val nativeLicenseAssets = layout.buildDirectory.dir("generated/assets/nativeLicenses")
-val copyNativeLicenseToAssets by
-    tasks.registering(Copy::class) {
-        from(rootProject.file("../../LICENSES/LGPL-3.0-only.txt"))
-        into(nativeLicenseAssets.map { it.dir("licenses") })
-        rename { "native-media-lgpl-3.0.txt" }
+
+abstract class CopyNativeLicense : DefaultTask() {
+    @get:InputFile
+    @get:PathSensitive(PathSensitivity.NONE)
+    abstract val licenseFile: RegularFileProperty
+
+    @get:OutputDirectory
+    abstract val outputDirectory: DirectoryProperty
+
+    @TaskAction
+    fun copyLicense() {
+        val destination = outputDirectory.file("licenses/native-media-lgpl-3.0.txt").get().asFile
+        destination.parentFile.mkdirs()
+        licenseFile.get().asFile.copyTo(destination, overwrite = true)
     }
+}
+
+androidComponents.onVariants { variant ->
+    val copyLicense =
+        tasks.register<CopyNativeLicense>("copy${variant.name.replaceFirstChar(Char::uppercase)}NativeLicense") {
+            licenseFile.set(rootProject.layout.projectDirectory.file("../../LICENSES/LGPL-3.0-only.txt"))
+        }
+    variant.sources.assets?.addGeneratedSourceDirectory(copyLicense, CopyNativeLicense::outputDirectory)
+}
 
 android {
     namespace = "dev.spidola.tv"
@@ -110,11 +126,7 @@ android {
     testOptions {
         execution = "ANDROIDX_TEST_ORCHESTRATOR"
     }
-
-    sourceSets["main"].assets.srcDir(nativeLicenseAssets)
 }
-
-tasks.named("preBuild").configure { dependsOn(copyNativeLicenseToAssets) }
 
 kotlin {
     jvmToolchain(21)
@@ -154,9 +166,10 @@ dependencies {
     implementation(libs.kotlinx.serialization.json)
     implementation(libs.kotlinx.coroutines)
 
-    testImplementation(kotlin("test"))
+    testImplementation(kotlin("test-junit5"))
     testImplementation(libs.junit5.api)
     testRuntimeOnly(libs.junit5.engine)
+    testRuntimeOnly(libs.junit5.launcher)
 
     androidTestImplementation(platform(libs.compose.bom))
     androidTestImplementation("androidx.compose.ui:ui-test-junit4")
