@@ -78,7 +78,7 @@ packaging-tool pin is also enforced in `.github/workflows/android.yml`.
 | Java/Kotlin compilation toolchain | **21** (source and bytecode target; minimum local JDK) |
 | Kotlin | **2.4.20** (K2-only compiler; `org.jetbrains.kotlin.plugin.compose`) |
 | KSP | **2.3.12** (KSP2 unified versioning; never KAPT) |
-| Android Gradle Plugin | **9.4.0** |
+| Android Gradle Plugin | **9.4.1** |
 | Gradle | **9.7.1** (`gradle-wrapper.properties`) |
 | compileSdk / targetSdk | **37** / **36** |
 | minSdk | **26** |
