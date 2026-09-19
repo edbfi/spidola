@@ -4,9 +4,8 @@
     "41898282+github-actions[bot]@users.noreply.github.com"
   ],
   "extends": [
-    "github>edbfi/automation//default.json#v2.0.0",
-    "github>edbfi/automation//mixed.json#v2.0.0",
-    "github>edbfi/automation//automerge.json#v2.0.0"
+    "github>edbfi/automation//default.json#v3.0.1",
+    "github>edbfi/automation//mixed.json#v3.0.1"
   ],
   "packageRules": [
     {
@@ -31,6 +30,12 @@
         "arm64-v8a:armeabi-v7a"
       ],
       "enabled": false
+    },
+    {
+      "matchPackageNames": [
+        "*"
+      ],
+      "automerge": false
     }
   ],
   "customManagers": [
@@ -87,5 +92,8 @@
       "depNameTemplate": "net.java.dev.jna:jna",
       "datasourceTemplate": "maven"
     }
-  ]
+  ],
+  "automerge": false,
+  "platformAutomerge": false,
+  "ignoreTests": false
 }

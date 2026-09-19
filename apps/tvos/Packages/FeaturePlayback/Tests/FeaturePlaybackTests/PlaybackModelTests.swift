@@ -136,7 +136,7 @@ final class PlaybackModelTests: XCTestCase {
     let model = harness.model()
     await model.start()
     harness.engines[0].simulate(.failed(.unsupportedFormat))
-    await settle()
+    await waitForFailure(model, expected: .unsupportedFormat)
     XCTAssertEqual(model.fallbackOffer?.alternate, .avPlayer)
   }
 
@@ -145,7 +145,7 @@ final class PlaybackModelTests: XCTestCase {
     let model = harness.model()
     await model.start()
     harness.engines[0].simulate(.failed(.decoderFailed))
-    await settle()
+    await waitForFailure(model, expected: .decoderFailed)
     XCTAssertEqual(model.fallbackOffer?.alternate, .avPlayer)
   }
 
@@ -155,7 +155,7 @@ final class PlaybackModelTests: XCTestCase {
     let model = harness.model()
     await model.start()
     harness.engines[0].simulate(.failed(.sourceUnreachable))
-    await settle()
+    await waitForFailure(model, expected: .sourceUnreachable)
     XCTAssertNil(model.fallbackOffer)
     XCTAssertEqual(model.state.failure, .sourceUnreachable)
   }
@@ -165,7 +165,7 @@ final class PlaybackModelTests: XCTestCase {
     let model = harness.model()
     await model.start()
     harness.engines[0].simulate(.failed(.unauthorized))
-    await settle()
+    await waitForFailure(model, expected: .unauthorized)
     XCTAssertNil(model.fallbackOffer)
   }
 
@@ -175,7 +175,7 @@ final class PlaybackModelTests: XCTestCase {
     let model = harness.model()
     await model.start()
     harness.engines[0].simulate(.failed(.unsupportedFormat))
-    await settle()
+    await waitForFailure(model, expected: .unsupportedFormat)
     XCTAssertNil(model.fallbackOffer)
   }
 
@@ -396,6 +396,15 @@ final class PlaybackModelTests: XCTestCase {
     }
     XCTAssertTrue(access.isGuideHeld, "the guide lookup must be suspended before releasing it")
     XCTAssertNotNil(model.window, "the zap window must be loaded before navigating")
+  }
+
+  /// Wait for the actual stream event before asserting fallback policy, including no-offer cases.
+  private func waitForFailure(_ model: PlaybackModel, expected: EngineError) async {
+    let deadline = ContinuousClock.now.advanced(by: .seconds(2))
+    while model.state.failure != expected && ContinuousClock.now < deadline {
+      await Task.yield()
+    }
+    XCTAssertEqual(model.state.failure, expected, "the injected failure must reach the model")
   }
 
   /// A fixed number of executor yields cannot prove that the state stream was consumed.
