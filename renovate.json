@@ -30,12 +30,6 @@
         "arm64-v8a:armeabi-v7a"
       ],
       "enabled": false
-    },
-    {
-      "matchPackageNames": [
-        "*"
-      ],
-      "automerge": false
     }
   ],
   "customManagers": [
@@ -93,7 +87,9 @@
       "datasourceTemplate": "maven"
     }
   ],
-  "automerge": false,
+  "automerge": true,
   "platformAutomerge": false,
-  "ignoreTests": false
+  "ignoreTests": false,
+  "automergeStrategy": "rebase",
+  "automergeType": "pr"
 }
