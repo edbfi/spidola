@@ -4,9 +4,9 @@
     "41898282+github-actions[bot]@users.noreply.github.com"
   ],
   "extends": [
-    "github>edbfi/automation//default.json#v2.0.0",
-    "github>edbfi/automation//mixed.json#v2.0.0",
-    "github>edbfi/automation//automerge.json#v2.0.0"
+    "github>edbfi/automation//default.json#v3.0.0",
+    "github>edbfi/automation//mixed.json#v3.0.0",
+    "github>edbfi/automation//automerge.json#v3.0.0"
   ],
   "packageRules": [
     {
