@@ -15,16 +15,6 @@ Actions with branches up to date, enforce it for administrators, and disallow
 force pushes, deletion and bypass. Keep any existing external DCO check required.
 Tag releases call the complete CI workflow before building their signed APK.
 
-Actions use full release tags. The common gate and Renovate defaults come from
-`edbfi/automation` at an immutable version; Renovate proposes explicit adoption
-of future shared releases for this repository. Configuration currently uses
-the non-automerge base until rollout settings and the revised policy are verified.
-Rust/Cargo, Gradle, SwiftPM and native media upgrades retain their compatibility,
-FFI and license checks. Pre-1.0 minor upgrades need explicit review. There is no
-Biome dependency: rustfmt/Clippy, bundled `swift format`/SwiftLint, and
-ktlint/detekt/Android Lint remain the stack's tools. CI skips only duplicated
-language hooks in `prek`; each dedicated language lane still runs those checks.
-
 Apple CLI releases are in `apple-tools.env`, installed by
 `install-apple-tools.sh` (add its printed paths locally). Rust compiler/MSRV,
 Kotlin/compiler catalog, cargo-ndk and the NDK have coupled pins: update their
