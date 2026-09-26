@@ -67,14 +67,6 @@ SPDX-License-Identifier = "AGPL-3.0-or-later"
 
 # Automation configuration is JSON and cannot carry inline SPDX headers.
 [[annotations]]
-path = ["renovate.json", ".github/merge-policy.json"]
-precedence = "aggregate"
-SPDX-FileCopyrightText = "2026 Spidola contributors"
-SPDX-License-Identifier = "AGPL-3.0-or-later"
-
-# The Gradle wrapper is third-party tooling (Apache-2.0). The gradlew/gradlew.bat scripts
-# already carry inline SPDX headers; the binary jar and the generated properties file cannot.
-[[annotations]]
 path = [
   "apps/androidtv/gradle/wrapper/gradle-wrapper.jar",
   "apps/androidtv/gradle/wrapper/gradle-wrapper.properties",
